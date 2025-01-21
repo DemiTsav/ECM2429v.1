@@ -26,6 +26,7 @@ class FieldValidations:
         except ValueError:
             return False
 
+
     def validate_date(self, date_str):
         try:
             datetime.strptime(date_str, "%d-%m-%y")
