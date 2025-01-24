@@ -1,40 +1,46 @@
 from asset_management.field_validations import FieldValidations
 from asset_management.ui_components import UIComponents
 import tkinter as tk
+from tkinter import ttk
+from tkinter.ttk import Treeview
+from typing import Dict, List, Optional, Tuple, Union
 
 class VehicleProcess:
 
-    def __init__(self, db):
+    def __init__(self, db: object) -> None:
         self.db = db  # Database instance
 
-    def process_add_vehicle(self, entries, tax_status_dropdown):
+    def process_add_vehicle(
+        self, entries: Dict[str, tk.Entry], tax_status_dropdown: ttk.Combobox
+    ) -> None:
         # Retrieve values from the entries
-        make = entries["Make"].get()
-        model = entries["Model"].get()
-        year = entries["Year"].get()
-        vehicle_type = entries["Vehicle Type"].get()
-        fuel_type = entries["Fuel Type"].get()
-        service_date = entries["Service Date"].get()
-        tax_due_date = entries["Tax Due Date"].get()
-        tax_status = tax_status_dropdown.get()
+        make: str = entries["Make"].get()
+        model: str = entries["Model"].get()
+        year: str = entries["Year"].get()
+        vehicle_type: str = entries["Vehicle Type"].get()
+        fuel_type: str = entries["Fuel Type"].get()
+        service_date: str = entries["Service Date"].get()
+        tax_due_date: str = entries["Tax Due Date"].get()
+        tax_status: str = tax_status_dropdown.get()
+
 
         # Perform validations
-        errors = FieldValidations.validations(self, entries, year, service_date, tax_due_date, tax_status)
+        errors: List[str] = FieldValidations.validations(self, entries, year, service_date, tax_due_date, tax_status)
         if errors:
             UIComponents.show_status_popup("Errors", "\n".join(errors))
             return
         
         try:
             self.db.add_vehicle(make, model, int(year), vehicle_type, fuel_type, service_date, tax_due_date, tax_status)
-            message = "Vehicle added successfully!"
+            message: str = "Vehicle added successfully!"
             UIComponents.show_status_popup("Success", message)
             UIComponents.clear_form_fields(self)
             self.show_all_vehicles()
         except Exception as e:
             UIComponents.show_status_popup("Error", f"Failed to add vehicle: {str(e)}")
 
-    def process_update_vehicle(self, vehicle_id):
-        updates = {
+    def process_update_vehicle(self, vehicle_id: str) -> None:
+        updates: Dict[str, str] = {
             field: widgets["entry"].get()
             for field, widgets in self.update_entries.items()
             if widgets["checkbox"].get()
@@ -43,7 +49,7 @@ class VehicleProcess:
             UIComponents.show_status_popup("Error", "No fields selected for update!")
             return
         
-        errors = FieldValidations.update_validations(self, updates)
+        errors: List[str] = FieldValidations.update_validations(self, updates)
         print(errors)
         if errors:
             UIComponents.show_status_popup("Error", "\n".join(errors))
@@ -57,9 +63,9 @@ class VehicleProcess:
             except Exception as e:
                 UIComponents.show_status_popup("Error", f"Failed to update vehicle: {e}")
 
-    def process_delete_vehicles(self, vehicle_info_list):
+    def process_delete_vehicles(self, vehicle_info_list: List[Tuple[str]]) -> None:
         """Deletes selected vehicles."""
-        vehicle_ids = [vehicle[0] for vehicle in vehicle_info_list]
+        vehicle_ids: List[str] = [vehicle[0] for vehicle in vehicle_info_list]
         try:
             for vehicle_id in vehicle_ids:
                 self.db.delete_vehicle(vehicle_id)
@@ -69,21 +75,20 @@ class VehicleProcess:
         except Exception as e:
             UIComponents.show_status_popup("Error", f"Failed to delete vehicle(s): {e}")
 
-    def retrieve_vehicle_id(self):
+    def retrieve_vehicle_id(self) -> Optional[str]:
         # This should be handled by the UI and not by VehicleProcess directly
-        selected_items = self.vehicle_table.selection()
+        selected_items: Tuple[str, ...] = self.vehicle_table.selection()
         if not selected_items:
             UIComponents.show_status_popup("Select a vehicle to update.")
             return
         return self.vehicle_table.item(selected_items[0], "values")[0]
 
-    def perform_search(self):
-        """Performs a search based on user inputs."""
-        conditions = []
-        query_params = []
+    def perform_search(self) -> None:
+        conditions: List[str] = []
+        query_params: List[Union[str, int]] = []
 
         for field, entry in self.search_entries.items():
-            value = entry.get().strip()
+            value: str = entry.get().strip()
             if value:
                 if field in ["Tax Due Date", "Service Date"]:
                     try:
@@ -112,14 +117,14 @@ class VehicleProcess:
         except Exception as e:
             UIComponents.show_status_popup("Error",f"Search failed: {str(e)}")
 
-    def update_vehicle_table(self, vehicles):
+    def update_vehicle_table(self, vehicles: List[Tuple]) -> None:
         """Update the vehicle table with search results."""
         for row in self.vehicle_table.get_children():
             self.vehicle_table.delete(row)
         for vehicle in vehicles:
             self.vehicle_table.insert("", tk.END, values=vehicle)
 
-    def show_deletion_confirmation(self, selected_items):
+    def show_deletion_confirmation(self, selected_items: Tuple[str, ...]) -> None:
         """Show confirmation message for deletion."""
         self.clear_dynamic_content()
         vehicle_info_list = [self.vehicle_table.item(item, "values") for item in selected_items]
@@ -131,7 +136,7 @@ class VehicleProcess:
 
         VehicleProcess.show_confirm_cancel_buttons(self, vehicle_info_list)
 
-    def show_confirm_cancel_buttons(self, vehicle_info_list):
+    def show_confirm_cancel_buttons(self, vehicle_info_list: List[Tuple[str, ...]]) -> None:
         """Show confirm/cancel buttons for deletion."""
         confirm_button = tk.Button(
             self.dynamic_content_frame,

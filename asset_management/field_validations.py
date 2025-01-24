@@ -1,8 +1,18 @@
 from datetime import datetime
+from typing import Dict, List, Optional, Union
+import tkinter as tk
+
 class FieldValidations:
 
-    def validations(self, entries, year, service_date, tax_due_date, tax_status):
-        errors = []
+    def validations(
+        self,
+        entries: Dict[str, Union[str, tk.Entry]],
+        year: Union[str, int],
+        service_date: str,
+        tax_due_date: str,
+        tax_status: Optional[str]
+    ) -> Optional[List[str]]:
+        errors: List[str] = []
         for field, entry in entries.items():
             if not entry.get().strip():
                 errors.append(f"{field} cannot be empty.")
@@ -19,7 +29,7 @@ class FieldValidations:
         if errors:
             return errors
 
-    def validate_year(self, year: int) -> bool:
+    def validate_year(self, year: Union[str, int]) -> bool:
         try:
             year = int(year)
             return 1900 <= year <= datetime.now().year
@@ -27,15 +37,15 @@ class FieldValidations:
             return False
 
 
-    def validate_date(self, date_str):
+    def validate_date(self, date_str: str) -> bool:
         try:
             datetime.strptime(date_str, "%d-%m-%y")
             return True
         except ValueError:
             return False
         
-    def update_validations(self, updates):
-        errors = []
+    def update_validations(self, updates: Dict[str, str]) -> List[str]:
+        errors: List[str] = []
         # Validate updates (add appropriate validations for your fields)
         if "Year" in updates and not FieldValidations.validate_year(self, updates["Year"]):
             errors.append("Invalid year!")

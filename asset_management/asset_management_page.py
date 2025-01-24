@@ -4,12 +4,15 @@ from vehicle_management_task.database import VehicleDatabase
 from asset_management.vehicle_processes import VehicleProcess
 from asset_management.ui_components import UIComponents
 from asset_reporting.asset_reporting import AssetReportingPage
-
+from typing import Callable, Dict, List, Optional, Union
 
 class AssetManagementPage(tk.Frame):
-    def __init__(self, parent, db):
+    def __init__(self, parent: tk.Tk, db: VehicleDatabase) -> None:
         super().__init__(parent)
         self.db: VehicleDatabase = db
+        self.entries: Dict[str, tk.Entry] = {}
+        self.update_entries: Dict[str, Union[tk.Entry, ttk.Combobox]] = {}
+        self.search_entries: Dict[str, Union[tk.Entry, ttk.Combobox]] = {}
         self.pack(fill="both", expand=True)
         self.create_widgets()
 
