@@ -147,13 +147,13 @@ class AssetManagementPage(tk.Frame):
     def show_update_vehicle_form(self) -> None:
         self.clear_dynamic_content()
         self.show_all_vehicles()
-
         # Prompt user to select a vehicle
-        selected_items: list = self.vehicle_table.selection()
-        if not selected_items:
-            tk.Label(self.dynamic_content_frame, text="Select a vehicle to update.", fg="blue").pack()
-            return
+        tk.Label(self.dynamic_content_frame, text="Select a vehicle to update.", fg="blue").pack()
+        self.update_button = UIComponents.create_button(self, self.dynamic_content_frame, text="Update", command= self.confirm_update, padx=10)
 
+    def confirm_update(self):
+        self.update_button.pack_forget()
+        selected_items: list = self.vehicle_table.selection()
         # Get selected vehicle information
         vehicle_id: str = self.vehicle_table.item(selected_items[0], "values")[0]
         try:
@@ -162,7 +162,11 @@ class AssetManagementPage(tk.Frame):
                 tk.Label(self.dynamic_content_frame, text="Vehicle not found in database.", fg="red").pack()
                 return
         except Exception as e:
-            tk.Label(self.dynamic_content_frame, text=f"Error retrieving vehicle: {str(e)}", fg="red").pack()
+            tk.Label(
+                self.dynamic_content_frame,
+                text=f"Error retrieving vehicle: {str(e)}",
+                fg="red"
+            ).pack()
             return
 
         tk.Label(self.dynamic_content_frame, text=f"Updating Vehicle ID: {vehicle_id}", font=("Helvetica", 14)).pack(pady=5)
@@ -177,7 +181,7 @@ class AssetManagementPage(tk.Frame):
         
         tk.Button(
             self.dynamic_content_frame,
-            text="Update",
+            text="Update vehicle",
             command=lambda: VehicleProcess.process_update_vehicle(self, vehicle_id)
         ).pack(pady=10)
         self.show_all_vehicles()
