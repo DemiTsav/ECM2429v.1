@@ -2,8 +2,8 @@ from asset_management.field_validations import FieldValidations
 from asset_management.ui_components import UIComponents
 import tkinter as tk
 from tkinter import ttk
-from tkinter.ttk import Treeview
 from typing import Dict, List, Optional, Tuple, Union
+
 
 class VehicleProcess:
 
@@ -22,22 +22,26 @@ class VehicleProcess:
         service_date: str = entries["Service Date"].get()
         tax_due_date: str = entries["Tax Due Date"].get()
         tax_status: str = tax_status_dropdown.get()
-
-
-        # Perform validations
-        errors: List[str] = FieldValidations.validations(self, entries, year, service_date, tax_due_date, tax_status)
+        errors: List[str] = FieldValidations.validations(
+            self, entries, year, service_date, tax_due_date, tax_status
+            )
         if errors:
             UIComponents.show_status_popup("Errors", "\n".join(errors))
             return
-        
+
         try:
-            self.db.add_vehicle(make, model, int(year), vehicle_type, fuel_type, service_date, tax_due_date, tax_status)
+            self.db.add_vehicle(
+                make, model, int(year), vehicle_type, fuel_type, service_date,
+                tax_due_date, tax_status
+                )
             message: str = "Vehicle added successfully!"
             UIComponents.show_status_popup("Success", message)
             UIComponents.clear_form_fields(self)
             self.show_all_vehicles()
         except Exception as e:
-            UIComponents.show_status_popup("Error", f"Failed to add vehicle: {str(e)}")
+            UIComponents.show_status_popup(
+                "Error", f"Failed to add vehicle: {str(e)}"
+                )
 
     def process_update_vehicle(self, vehicle_id: str) -> None:
         updates: Dict[str, str] = {
@@ -46,9 +50,11 @@ class VehicleProcess:
             if widgets["checkbox"].get()
         }
         if not updates:
-            UIComponents.show_status_popup("Error", "No fields selected for update!")
+            UIComponents.show_status_popup(
+                "Error", "No fields selected for update!"
+                )
             return
-        
+
         errors: List[str] = FieldValidations.update_validations(self, updates)
         print(errors)
         if errors:
@@ -57,23 +63,34 @@ class VehicleProcess:
         else:
             try:
                 self.db.update_vehicle(vehicle_id, updates)
-                UIComponents.show_status_popup("Success", "Vehicle updated successfully!")
+                UIComponents.show_status_popup(
+                    "Success", "Vehicle updated successfully!"
+                    )
                 self.clear_dynamic_content()
-                self.show_all_vehicles() 
+                self.show_all_vehicles()
             except Exception as e:
-                UIComponents.show_status_popup("Error", f"Failed to update vehicle: {e}")
+                UIComponents.show_status_popup(
+                    "Error", f"Failed to update vehicle: {e}"
+                    )
 
-    def process_delete_vehicles(self, vehicle_info_list: List[Tuple[str]]) -> None:
+    def process_delete_vehicles(
+        self, vehicle_info_list: List[Tuple[str]]
+    ) -> None:
         """Deletes selected vehicles."""
         vehicle_ids: List[str] = [vehicle[0] for vehicle in vehicle_info_list]
         try:
             for vehicle_id in vehicle_ids:
                 self.db.delete_vehicle(vehicle_id)
-            UIComponents.show_status_popup("Success", f"Deleted {len(vehicle_info_list)} vehicle(s) successfully!")
+            UIComponents.show_status_popup(
+                "Success",
+                f"Deleted {len(vehicle_info_list)} vehicle(s) successfully!"
+            )
             self.clear_dynamic_content()
             self.show_all_vehicles()
         except Exception as e:
-            UIComponents.show_status_popup("Error", f"Failed to delete vehicle(s): {e}")
+            UIComponents.show_status_popup(
+                "Error", f"Failed to delete vehicle(s): {e}"
+                )
 
     def retrieve_vehicle_id(self) -> Optional[str]:
         # This should be handled by the UI and not by VehicleProcess directly
@@ -92,30 +109,37 @@ class VehicleProcess:
             if value:
                 if field in ["Tax Due Date", "Service Date"]:
                     try:
-                        if len(value) == 8 and value.count('-') == 2:
-                            day, month, year = value.split('-')
-                            year = int(year)
-                            conditions.append(f"CAST(SUBSTR({field.replace(' ', '_').lower()}, 7, 4) AS INTEGER) = ?")
-                            query_params.append(year)
-                        elif len(value) == 4:
-                            year = int(value)
-                            conditions.append(f"CAST(SUBSTR({field.replace(' ', '_').lower()}, 7, 4) AS INTEGER) = ?")
-                            query_params.append(year)
+                        if field in ["Tax Due Date", "Service Date"]:
+                            field_replace = field.replace(' ', '_').lower()
+                            if len(value) == 8 and value.count('-') == 2:
+                                day, month, year = value.split('-')
+                                year = int(year)
+                                conditions.append(f"{field_replace} = ?")
+                                query_params.append(value)
+                            else:
+                                print(f"Invalid date format for {field}: {value}. Please enter in dd-mm-yy format.")
+                                pass
+                        else:
+                            conditions.append(f"CAST({field_replace} AS TEXT) LIKE ?")
+                            query_params.append(f"%{value}%")
                     except ValueError:
                         pass
-                else:
-                    conditions.append(f"CAST({field.replace(' ', '_').lower()} AS TEXT) LIKE ?")
-                    query_params.append(f"%{value}%")
-
+                        # passing to allow for dynamic search functionality
         query = "SELECT * FROM vehicles"
         if conditions:
-            query += " WHERE " + " AND ".join(conditions)
+            query += " WHERE "
+            query += " AND ".join(
+                conditions
+            )
 
         try:
             results = self.db.query_vehicles(query, query_params)
             VehicleProcess.update_vehicle_table(self, results)
         except Exception as e:
-            UIComponents.show_status_popup("Error",f"Search failed: {str(e)}")
+            UIComponents.show_status_popup(
+                "Error",
+                f"Search failed: {str(e)}"
+            )
 
     def update_vehicle_table(self, vehicles: List[Tuple]) -> None:
         """Update the vehicle table with search results."""
@@ -124,29 +148,49 @@ class VehicleProcess:
         for vehicle in vehicles:
             self.vehicle_table.insert("", tk.END, values=vehicle)
 
-    def show_deletion_confirmation(self, selected_items: Tuple[str, ...]) -> None:
+    def show_deletion_confirmation(
+            self, selected_items: Tuple[str, ...]
+            ) -> None:
         """Show confirmation message for deletion."""
         self.clear_dynamic_content()
-        vehicle_info_list = [self.vehicle_table.item(item, "values") for item in selected_items]
+        vehicle_info_list = [
+            self.vehicle_table.item(item, "values") for item in selected_items
+            ]
 
-        UIComponents.display_message(self, "Are you sure you want to delete the following vehicles?", "black")
+        UIComponents.display_message(
+            self,
+            "Are you sure you want to delete the following vehicles?",
+            "black"
+            )
         for vehicle_info in vehicle_info_list:
-            vehicle_details = f"ID: {vehicle_info[0]}\nMake: {vehicle_info[1]}\nModel: {vehicle_info[2]}"
-            UIComponents.display_message(self, vehicle_details, "black", font=("Helvetica", 10))
+            id = vehicle_info[0]
+            make = vehicle_info[1]
+            model = vehicle_info[2]
+            vehicle_details = f"ID: {id}\nMake: {make}\nModel: {model}"
+            UIComponents.display_message(
+                self, vehicle_details, "black", font=("Helvetica", 10)
+                )
 
         VehicleProcess.show_confirm_cancel_buttons(self, vehicle_info_list)
 
-    def show_confirm_cancel_buttons(self, vehicle_info_list: List[Tuple[str, ...]]) -> None:
+    def show_confirm_cancel_buttons(
+            self, vehicle_info_list: List[Tuple[str, ...]]
+            ) -> None:
         """Show confirm/cancel buttons for deletion."""
         confirm_button = tk.Button(
             self.dynamic_content_frame,
             text="Confirm Deletion",
             fg="white",
             bg="red",
-            command=lambda: VehicleProcess.process_delete_vehicles(self, vehicle_info_list)
+            command=lambda: VehicleProcess.process_delete_vehicles(
+                self, vehicle_info_list
+                )
         )
         confirm_button.pack(side="left", padx=10, pady=10)
 
-        cancel_button = tk.Button(self.dynamic_content_frame, text="Cancel", command=self.clear_dynamic_content)
+        cancel_button = tk.Button(
+            self.dynamic_content_frame,
+            text="Cancel",
+            command=self.clear_dynamic_content
+            )
         cancel_button.pack(side="left", padx=10, pady=10)
-
