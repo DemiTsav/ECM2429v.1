@@ -9,6 +9,13 @@ from typing import Dict, Union
 
 class AssetManagementPage(tk.Frame):
     def __init__(self, parent: tk.Tk, db: VehicleDatabase) -> None:
+        """
+        Initialize the Asset Management Page.
+
+        Args:
+            parent (tk.Tk): The parent Tkinter window.
+            db (VehicleDatabase): The database instance for vehicle data.
+        """
         super().__init__(parent)
         self.db: VehicleDatabase = db
         self.entries: Dict[str, tk.Entry] = {}
@@ -27,6 +34,9 @@ class AssetManagementPage(tk.Frame):
 
     # Title Label
     def _create_title_label(self) -> None:
+        """
+        Create and pack the title label at the top of the page.
+        """
         self.title_label = tk.Label(
             self, text="Council Asset Management", font=("Helvetica", 20)
         )
@@ -34,6 +44,9 @@ class AssetManagementPage(tk.Frame):
 
     # Vehicle Table and Scrollbar
     def _create_vehicle_table(self) -> None:
+        """
+        Create and pack the vehicle table along with a scrollbar.
+        """
         self.vehicle_table_frame = tk.Frame(self)
         self.vehicle_table_frame.pack(pady=10, fill="both", expand=True)
         self.vehicle_table = self._init_vehicle_table(self.vehicle_table_frame)
@@ -43,6 +56,15 @@ class AssetManagementPage(tk.Frame):
 
     @staticmethod
     def _init_vehicle_table(parent: tk.Frame) -> ttk.Treeview:
+        """
+        Initialize the vehicle table.
+
+        Args:
+            parent (tk.Frame): The parent frame where the table will be placed.
+
+        Returns:
+            ttk.Treeview: The initialized vehicle table.
+        """
         columns = (
             "ID", "Make", "Model", "Year", "Type", "Fuel",
             "Service Date", "Tax Due Date", "Tax Status"
@@ -58,6 +80,17 @@ class AssetManagementPage(tk.Frame):
 
     @staticmethod
     def _add_scrollbar(parent: tk.Frame, table: ttk.Treeview) -> tk.Scrollbar:
+        """
+        Add a vertical scrollbar to the vehicle table.
+
+        Args:
+            parent (tk.Frame): Parent frame for scrollbar.
+            table (ttk.Treeview): The vehicle table which requires the
+            scrollbar.
+
+        Returns:
+            tk.Scrollbar: The added vertical scrollbar.
+        """
         scrollbar = tk.Scrollbar(
             parent, orient="vertical", command=table.yview
             )
@@ -67,6 +100,10 @@ class AssetManagementPage(tk.Frame):
 
     # Action Buttons
     def _create_action_buttons(self) -> None:
+        """
+        Create and pack the action buttons;
+        (Add, Update, Delete, Search, Report)
+        """
         self.actions_frame = tk.Frame(self)
         self.actions_frame.pack(pady=5)
 
@@ -86,6 +123,9 @@ class AssetManagementPage(tk.Frame):
 
     # Dynamic Content Frame
     def _create_dynamic_content_frame(self) -> None:
+        """
+        Create and pack the dynamic content frame that holds form elements.
+        """
         self.dynamic_content_frame = tk.Frame(self)
         self.dynamic_content_frame.pack(pady=10, fill="both", expand=True)
 
@@ -98,28 +138,40 @@ class AssetManagementPage(tk.Frame):
         # Fetch vehicles from the database
         vehicles = self.db.get_all_vehicles()
         if not vehicles:
-            print("no vehicles")
-            return  # No vehicles to display
-        print("vehicles found")
+            return
         # Insert vehicles into the table
         self._populate_table(vehicles)
 
     def _reset_table(self) -> None:
+        """
+        Clear all rows from the vehicle table.
+        """
         for row in self.vehicle_table.get_children():
             self.vehicle_table.delete(row)
 
     def _populate_table(self, vehicles: list) -> None:
-        """Populate the vehicle table with data from the database."""
+        """
+        Populate the vehicle table with data from the database.
+
+        Args:
+            vehicles (list): A list of vehicle data for display in table.
+        """
         for vehicle in vehicles:
             self.vehicle_table.insert("", tk.END, values=vehicle)
 
     # Dynamic Content Handling
     def clear_dynamic_content(self) -> None:
+        """
+        Clear all widgets from the dynamic content frame.
+        """
         for widget in self.dynamic_content_frame.winfo_children():
             widget.destroy()
 
     # Add Vehicle Form
     def show_add_vehicle_form(self) -> None:
+        """
+        Display the form to add a new vehicle to the database.
+        """
         self.clear_dynamic_content()
         self.show_all_vehicles()
         self._create_vehicle_form("Add Vehicle", self._process_add_vehicle)
@@ -127,6 +179,14 @@ class AssetManagementPage(tk.Frame):
     def _create_vehicle_form(
             self, action: str, process_callback: callable
             ) -> None:
+        """
+        Create a form to add or update a vehicle.
+
+        Args:
+            action (str): The action for the form (e.g., "Add Vehicle").
+            process_callback (callable): The function called upon form
+            submission.
+        """
         tk.Label(
             self.dynamic_content_frame,
             text=f"{action} Form",
@@ -151,12 +211,21 @@ class AssetManagementPage(tk.Frame):
         ).pack(pady=10)
 
     def _create_form_entry(self, field: str) -> None:
+        """
+        Create a form entry for a given field.
+
+        Args:
+            field (str): The name of the field for the entry widget.
+        """
         tk.Label(self.dynamic_content_frame, text=field).pack(anchor="w")
         entry = tk.Entry(self.dynamic_content_frame)
         entry.pack(fill="x", pady=2)
         self.entries[field] = entry
 
     def _create_tax_status_dropdown(self) -> None:
+        """
+        Create a dropdown for selecting the tax status of the vehicle.
+        """
         tk.Label(
             self.dynamic_content_frame, text="Tax Status"
             ).pack(anchor="w")
@@ -168,12 +237,22 @@ class AssetManagementPage(tk.Frame):
         self.tax_status_dropdown.pack(fill="x", pady=2)
 
     def _process_add_vehicle(self, entries: dict, tax_status: str) -> None:
+        """
+        Process the addition of a new vehicle to the database.
+
+        Args:
+            entries (dict): The dictionary of form entries.
+            tax_status (str): The selected tax status of the vehicle.
+        """
         VehicleProcess.process_add_vehicle(
             self, entries, self.tax_status_dropdown
             )
 
     # Update Vehicle Form
     def show_update_vehicle_form(self) -> None:
+        """
+        Display the form to update an existing vehicle.
+        """
         self.clear_dynamic_content()
         self.show_all_vehicles()
         # Prompt user to select a vehicle
@@ -188,6 +267,9 @@ class AssetManagementPage(tk.Frame):
             )
 
     def confirm_update(self):
+        """
+        Confirm and execute the update of a selected vehicle.
+        """
         self.update_button.pack_forget()
         selected_items: list = self.vehicle_table.selection()
         # Get selected vehicle information
@@ -239,6 +321,9 @@ class AssetManagementPage(tk.Frame):
         self.show_all_vehicles()
 
     def delete_vehicle_prompt(self) -> None:
+        """
+        Display a confirmation prompt to delete a vehicle.
+        """
         self.clear_dynamic_content()
         self.show_all_vehicles()
         tk.Label(
@@ -254,6 +339,9 @@ class AssetManagementPage(tk.Frame):
             )
 
     def confirm_deletion(self):
+        """
+        Display the confirmation message and selected vehicle details
+        """
         selected_items: list = self.vehicle_table.selection()
         if not selected_items:
             return
@@ -288,6 +376,9 @@ class AssetManagementPage(tk.Frame):
 
     # Search Vehicles Form
     def show_search_form(self) -> None:
+        """
+        Display the search form for filtering vehicles.
+        """
         self.clear_dynamic_content()
         self.show_all_vehicles()  # Reset the table before showing the form
 
@@ -340,6 +431,7 @@ class AssetManagementPage(tk.Frame):
         VehicleProcess.perform_search(self)
 
     def open_new_window(self, create_widget: callable, *args) -> None:
+        """Initilise a new win dowe for asset reporting functions"""
         new_window = tk.Toplevel()
         new_window.title("Asset Reporting")
         create_widget(new_window, *args)
@@ -347,4 +439,7 @@ class AssetManagementPage(tk.Frame):
     def open_asset_reporting_page(
             self, new_window: tk.Toplevel, db: VehicleDatabase
             ) -> None:
+        """
+        Open the page to generate asset reports.
+        """
         AssetReportingPage(new_window, db)
