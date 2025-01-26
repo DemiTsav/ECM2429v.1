@@ -8,6 +8,9 @@ from typing import Dict, Union
 
 
 class AssetManagementPage(tk.Frame):
+    """
+    A class for displaying and using features on the asset management UI
+    """
     def __init__(self, parent: tk.Tk, db: VehicleDatabase) -> None:
         """
         Initialize the Asset Management Page.
@@ -222,19 +225,29 @@ class AssetManagementPage(tk.Frame):
         entry.pack(fill="x", pady=2)
         self.entries[field] = entry
 
-    def _create_tax_status_dropdown(self) -> None:
+    def _create_tax_status_dropdown(self) -> ttk.Combobox:
         """
         Create a dropdown for selecting the tax status of the vehicle.
         """
         tk.Label(
             self.dynamic_content_frame, text="Tax Status"
-            ).pack(anchor="w")
-        self.tax_status_dropdown = ttk.Combobox(
-            self.dynamic_content_frame, values=[
-                "Tax Paid", "Tax Due", "SORN", "Exempt"
-                ]
+        ).pack(anchor="w")
+
+        # Create a readonly Combobox
+        tax_status_dropdown = ttk.Combobox(
+            self.dynamic_content_frame,
+            values=["Tax Paid", "Tax Due", "SORN", "Exempt"],
+            state="readonly"  # Ensure it's readonly
         )
-        self.tax_status_dropdown.pack(fill="x", pady=2)
+        tax_status_dropdown.pack(fill="x", pady=2)
+
+        # Automatically open dropdown options when clicked
+        tax_status_dropdown.bind(
+            "<Button-1>", lambda event: tax_status_dropdown.event_generate("<Down>")
+        )
+
+        return tax_status_dropdown
+
 
     def _process_add_vehicle(self, entries: dict, tax_status: str) -> None:
         """
@@ -248,30 +261,29 @@ class AssetManagementPage(tk.Frame):
             self, entries, self.tax_status_dropdown
             )
 
-    # Update Vehicle Form
     def show_update_vehicle_form(self) -> None:
         """
         Display the form to update an existing vehicle.
         """
+        selected_items: list = self.vehicle_table.selection()
         self.clear_dynamic_content()
-        self.show_all_vehicles()
-        # Prompt user to select a vehicle
-        tk.Label(
-            self.dynamic_content_frame,
-            text="Select a vehicle to update.",
-            fg="blue"
-        ).pack()
-        self.update_button = UIComponents.create_button(
-            self, self.dynamic_content_frame, text="Update",
-            command=self.confirm_update, padx=10
-            )
+        if not selected_items:
+            self.show_all_vehicles()
+            tk.Label(
+                self.dynamic_content_frame,
+                text="Select a vehicle to update.",
+                fg="blue"
+            ).pack()
+            return
+        else:
+            self.confirm_update(selected_items)
 
-    def confirm_update(self):
+    def confirm_update(self, selected_items):
         """
         Confirm and execute the update of a selected vehicle.
         """
-        self.update_button.pack_forget()
-        selected_items: list = self.vehicle_table.selection()
+        # self.update_button.pack_forget()
+        # selected_items: list = self.vehicle_table.selection()
         # Get selected vehicle information
         vehicle_id: str = self.vehicle_table.item(
             selected_items[0], "values"
@@ -307,9 +319,19 @@ class AssetManagementPage(tk.Frame):
         for field in fields:
             UIComponents.checkbox_updates(self, field, vehicle_info)
 
-        UIComponents.create_tax_status_dropdown(
-            self,
-            vehicle_info
+        tax_status_var, checkbox = UIComponents.create_checkbox(
+            self, "Tax Status", default_value=False
+        )
+        tax_status_dropdown = self._create_tax_status_dropdown()
+        # tax_status_dropdown.config(state="disabled")
+        tax_status_dropdown.config(state="readonly")
+
+        # Bind checkbox to enable/disable the dropdown
+        tax_status_var.trace_add(
+            "write",
+            lambda *args: UIComponents.toggle_entry_state(
+                self, tax_status_var, tax_status_dropdown
+            )
         )
         tk.Button(
             self.dynamic_content_frame,
@@ -324,25 +346,23 @@ class AssetManagementPage(tk.Frame):
         """
         Display a confirmation prompt to delete a vehicle.
         """
+        selected_items: list = self.vehicle_table.selection()
         self.clear_dynamic_content()
-        self.show_all_vehicles()
-        tk.Label(
-            self.dynamic_content_frame,
-            text="Please select a vehicle to delete.",
-            fg="blue"
+        if not selected_items:
+            tk.Label(
+                self.dynamic_content_frame,
+                text="Please select a vehicle to delete.",
+                fg="blue"
             ).pack()
-        UIComponents.create_button(
-            self, self.dynamic_content_frame,
-            text="Delete",
-            command=self.confirm_deletion,
-            padx=10
-            )
+            self.show_all_vehicles()
+            return
+        else:
+            self.confirm_deletion(selected_items)
 
-    def confirm_deletion(self):
+    def confirm_deletion(self, selected_items):
         """
         Display the confirmation message and selected vehicle details
         """
-        selected_items: list = self.vehicle_table.selection()
         if not selected_items:
             return
         delete_button = tk.Button(
@@ -374,7 +394,7 @@ class AssetManagementPage(tk.Frame):
                 ).pack()
             return
 
-    # Search Vehicles Form
+
     def show_search_form(self) -> None:
         """
         Display the search form for filtering vehicles.
@@ -395,8 +415,6 @@ class AssetManagementPage(tk.Frame):
             "Service Date", "Tax Due Date"
             ]
         self.search_entries = {}
-
-        # Create entry fields for each searchable column
         for field in fields:
             frame = tk.Frame(self.dynamic_content_frame)
             frame.pack(fill="x", pady=2)
@@ -414,15 +432,7 @@ class AssetManagementPage(tk.Frame):
         frame = tk.Frame(self.dynamic_content_frame)
         frame.pack(fill="x", pady=2)
 
-        tk.Label(
-            frame, text="Tax Status", width=15, anchor="w"
-            ).pack(side="left")
-        tax_status_dropdown = ttk.Combobox(
-            frame,
-            values=["Tax Paid", "Tax Due", "SORN", "Exempt"],
-            width=18  # Adjust dropdown width
-        )
-        tax_status_dropdown.pack(side="left", padx=2)
+        tax_status_dropdown = self._create_tax_status_dropdown()
         tax_status_dropdown.bind(
             "<<ComboboxSelected>>",
             lambda event: VehicleProcess.perform_search(self)
@@ -431,7 +441,7 @@ class AssetManagementPage(tk.Frame):
         VehicleProcess.perform_search(self)
 
     def open_new_window(self, create_widget: callable, *args) -> None:
-        """Initilise a new win dowe for asset reporting functions"""
+        """Initilise a new window for asset reporting functions"""
         new_window = tk.Toplevel()
         new_window.title("Asset Reporting")
         create_widget(new_window, *args)

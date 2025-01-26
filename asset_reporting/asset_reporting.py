@@ -3,16 +3,37 @@ from tkinter import messagebox, filedialog
 import csv
 from vehicle_management_task.database import VehicleDatabase
 from typing import List, Dict, Tuple
+from asset_management.ui_components import UIComponents
 
 
 class AssetReportingPage(tk.Frame):
+    
+    """
+    A Frame which allows the user to generate and display various reports
+    about vehicles in the asset management system. Users can choose from predefined 
+    report types or create a custom report with specific filters, and export reports 
+    to CSV files.
+    """
+    
     def __init__(self, parent: tk.Widget, db: VehicleDatabase) -> None:
+        """
+        Initializes the AssetReportingPage with a connection to the database
+        and sets up the user interface for generating reports.
+
+        Args:
+            parent (tk.Widget): The parent widget to place this frame in.
+            db (VehicleDatabase): The database object to query for vehicle data.
+        """
         super().__init__(parent)
         self.db = db
         self.pack(fill="both", expand=True)
         self.create_widgets()
 
     def create_widgets(self) -> None:
+        """
+        Creates and arranges the widgets on the page, including labels, dropdowns, 
+        and buttons for report selection and generation.
+        """
         self.title_label = tk.Label(
             self,
             text="Asset Reporting",
@@ -67,7 +88,12 @@ class AssetReportingPage(tk.Frame):
         self.confirm_export_button = None
 
     def generate_report(self) -> None:
-        # Clear the previous report results
+        """
+        Generates a report based on the selected report type and displays it in the report area.
+
+        Queries the database for the appropriate data based on the selected report type.
+        If the report type is "Custom Report", a custom report generation form is shown instead.
+        """
         self.report_text.delete(1.0, tk.END)
 
         # Get selected report type from the StringVar
@@ -107,14 +133,21 @@ class AssetReportingPage(tk.Frame):
         if query:
             self.vehicles = self.db.query_vehicles(query)
         else:
-            messagebox.showerror("Error", "Please select a valid report type.")
+            UIComponents.show_status_popup("Error", "Please select a valid report type.")
             return
 
         # Display the report
         AssetReportingPage.display_report(self)
 
     def display_report(self) -> None:
-        # Clear the previous report results before displaying the new report
+        """
+        Displays the generated report in the report area.     
+        The report is formatted as a text table,
+        showing all relevant vehicle information.
+
+        After the report is displayed, an export button is added to allow the user to export
+        the report to a CSV file.
+        """
         self.report_text.delete(1.0, tk.END)
 
         # Format and display the vehicles in the report text widget
@@ -149,7 +182,11 @@ class AssetReportingPage(tk.Frame):
             self.confirm_export_button.pack(pady=10)
 
     def custom_report(self) -> None:
-        # Clear the previous filters
+        """
+        Creates a custom report form with filter fields for users to enter
+        custom filtering criteria.
+        Generates a report based on the user-defined filters.
+        """
         for widget in self.filter_frame.winfo_children():
             widget.destroy()
 
@@ -170,6 +207,16 @@ class AssetReportingPage(tk.Frame):
         self.generate_custom_report_button.pack(pady=10)
 
     def create_filter(self, window: tk.Frame, label_text: str) -> tk.Entry:
+        """
+        Creates a filter field for a specific vehicle attribute.
+
+        Args:
+            window (tk.Frame): The frame where the filter widget is placed.
+            label_text (str): The name of the vehicle attribute to filter by.
+
+        Returns:
+            tk.Entry: The entry widget for user input.
+        """
         label = tk.Label(window, text=f"Filter by {label_text}:")
         label.pack(pady=5)
         entry = tk.Entry(window)
@@ -177,7 +224,11 @@ class AssetReportingPage(tk.Frame):
         return entry
 
     def generate_custom_report(self) -> None:
-        # Clear the previous report results
+        """
+        Generates a custom report based on the filters provided by the user.
+
+        Builds a dynamic SQL query based on entered fields and shows results.
+        """
         self.report_text.delete(1.0, tk.END)
 
         # Build the SQL query dynamically based on user inputs
@@ -217,13 +268,15 @@ class AssetReportingPage(tk.Frame):
                 )
 
     def confirm_export_to_csv(self) -> None:
+        """
+        Confirms with the user if they want to export to a CSV file.
+        If confirmed, the export process is triggered.
+        """
         if not self.vehicles:
             messagebox.showerror(
                 "Error", "No report data available to export."
                 )
             return
-
-        # Ask the user for confirmation to export
         confirm: bool = messagebox.askyesno(
             "Export to CSV", "Do you want to export the report to a CSV file?"
             )
@@ -231,7 +284,10 @@ class AssetReportingPage(tk.Frame):
             self.export_to_csv()
 
     def export_to_csv(self) -> None:
-        # Open a file dialog to choose the location to save the CSV
+        """
+        Exports the displayed report to a CSV file, user to choose file
+        location and name. The report data is written to the selected file.
+        """
         file_path: str = filedialog.asksaveasfilename(
             defaultextension=".csv",
             filetypes=[("CSV Files", "*.csv")]

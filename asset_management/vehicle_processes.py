@@ -8,12 +8,21 @@ from typing import Dict, List, Optional, Tuple, Union
 class VehicleProcess:
 
     def __init__(self, db: object) -> None:
-        self.db = db  # Database instance
+        self.db = db
 
     def process_add_vehicle(
         self, entries: Dict[str, tk.Entry], tax_status_dropdown: ttk.Combobox
     ) -> None:
-        # Retrieve values from the entries
+        """
+        Process the addition of a new vehicle by validating inputs and saving
+        to the database.
+
+        Args:
+            entries (Dict[str, tk.Entry]): Dictionary containing entry fields
+            for vehicle details.
+            tax_status_dropdown (ttk.Combobox): Dropdown widget for selecting
+            the tax status.
+        """
         make: str = entries["Make"].get()
         model: str = entries["Model"].get()
         year: str = entries["Year"].get()
@@ -44,6 +53,12 @@ class VehicleProcess:
                 )
 
     def process_update_vehicle(self, vehicle_id: str) -> None:
+        """
+        Process the update of a vehicle's details.
+
+        Args:
+            vehicle_id (str): The ID of the vehicle to be updated.
+        """
         updates: Dict[str, str] = {
             field: widgets["entry"].get()
             for field, widgets in self.update_entries.items()
@@ -76,7 +91,13 @@ class VehicleProcess:
     def process_delete_vehicles(
         self, vehicle_info_list: List[Tuple[str]]
     ) -> None:
-        """Deletes selected vehicles."""
+        """
+        Deletes selected vehicles from the database.
+
+        Args:
+            vehicle_info_list (List[Tuple[str]]): List of tuples containing
+            vehicle IDs and details.
+        """
         vehicle_ids: List[str] = [vehicle[0] for vehicle in vehicle_info_list]
         try:
             for vehicle_id in vehicle_ids:
@@ -93,7 +114,13 @@ class VehicleProcess:
                 )
 
     def retrieve_vehicle_id(self) -> Optional[str]:
-        # This should be handled by the UI and not by VehicleProcess directly
+        """
+        Retrieve the selected vehicle ID from the table.
+
+        Returns:
+            Optional[str]: The ID of the selected vehicle, or None if no
+            selection is made.
+        """
         selected_items: Tuple[str, ...] = self.vehicle_table.selection()
         if not selected_items:
             UIComponents.show_status_popup("Select a vehicle to update.")
@@ -101,30 +128,33 @@ class VehicleProcess:
         return self.vehicle_table.item(selected_items[0], "values")[0]
 
     def perform_search(self) -> None:
+        """
+        Perform a search based on user input and display the results in the
+        vehicle table.
+        """
         conditions: List[str] = []
         query_params: List[Union[str, int]] = []
 
         for field, entry in self.search_entries.items():
             value: str = entry.get().strip()
             if value:
+                field_replace = field.replace(' ', '_').lower()
                 if field in ["Tax Due Date", "Service Date"]:
                     try:
-                        if field in ["Tax Due Date", "Service Date"]:
-                            field_replace = field.replace(' ', '_').lower()
-                            if len(value) == 8 and value.count('-') == 2:
-                                day, month, year = value.split('-')
-                                year = int(year)
-                                conditions.append(f"{field_replace} = ?")
-                                query_params.append(value)
-                            else:
-                                print(f"Invalid date format for {field}: {value}. Please enter in dd-mm-yy format.")
-                                pass
-                        else:
-                            conditions.append(f"CAST({field_replace} AS TEXT) LIKE ?")
-                            query_params.append(f"%{value}%")
+                        if len(value) == 8 and value.count('-') == 2:
+                            day, month, year = value.split('-')
+                            year = int(year)
+                            conditions.append(f"{field_replace} = ?")
+                            query_params.append(value)
                     except ValueError:
                         pass
-                        # passing to allow for dynamic search functionality
+                else:
+                    try:
+                        conditions.append(f"CAST({field_replace} AS TEXT) LIKE ?")
+                        query_params.append(f"%{value}%")
+                    except ValueError:
+                        pass
+
         query = "SELECT * FROM vehicles"
         if conditions:
             query += " WHERE "
@@ -142,7 +172,12 @@ class VehicleProcess:
             )
 
     def update_vehicle_table(self, vehicles: List[Tuple]) -> None:
-        """Update the vehicle table with search results."""
+        """
+        Update the vehicle table with new data.
+
+        Args:
+            vehicles (List[Tuple]): List of vehicle details to populate table.
+        """
         for row in self.vehicle_table.get_children():
             self.vehicle_table.delete(row)
         for vehicle in vehicles:
@@ -151,7 +186,12 @@ class VehicleProcess:
     def show_deletion_confirmation(
             self, selected_items: Tuple[str, ...]
             ) -> None:
-        """Show confirmation message for deletion."""
+        """
+        Display a confirmation prompt for deleting selected vehicles.
+
+        Args:
+            selected_items (Tuple[str, ...]): Selected rows from table.
+        """
         self.clear_dynamic_content()
         vehicle_info_list = [
             self.vehicle_table.item(item, "values") for item in selected_items
@@ -176,7 +216,13 @@ class VehicleProcess:
     def show_confirm_cancel_buttons(
             self, vehicle_info_list: List[Tuple[str, ...]]
             ) -> None:
-        """Show confirm/cancel buttons for deletion."""
+        """
+        Display confirm and cancel buttons for vehicle deletion.
+
+        Args:
+            vehicle_info_list (List[Tuple[str, ...]]): List of vehicle details
+            to be deleted.
+        """
         confirm_button = tk.Button(
             self.dynamic_content_frame,
             text="Confirm Deletion",

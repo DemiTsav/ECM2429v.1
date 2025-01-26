@@ -20,6 +20,7 @@ def main():
         root.destroy()
 
     root.protocol("WM_DELETE_WINDOW", on_close)
+    root.geometry(f"{root.winfo_screenwidth()}x{root.winfo_screenheight()}")
     root.mainloop()
 
 
