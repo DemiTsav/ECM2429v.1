@@ -205,11 +205,11 @@ class AssetManagementPage(tk.Frame):
         for field in fields:
             self._create_form_entry(field)
 
-        self._create_tax_status_dropdown()
+        tax_status_dropdown = self._create_tax_status_dropdown()
         tk.Button(
             self.dynamic_content_frame, text=action,
             command=lambda: process_callback(
-                self.entries, self.tax_status_dropdown.get()
+                self.entries, tax_status_dropdown.get()
                 )
         ).pack(pady=10)
 
@@ -248,7 +248,6 @@ class AssetManagementPage(tk.Frame):
 
         return tax_status_dropdown
 
-
     def _process_add_vehicle(self, entries: dict, tax_status: str) -> None:
         """
         Process the addition of a new vehicle to the database.
@@ -257,8 +256,9 @@ class AssetManagementPage(tk.Frame):
             entries (dict): The dictionary of form entries.
             tax_status (str): The selected tax status of the vehicle.
         """
+        tax_status_dropdown = self._create_tax_status_dropdown
         VehicleProcess.process_add_vehicle(
-            self, entries, self.tax_status_dropdown
+            self, entries, tax_status_dropdown
             )
 
     def show_update_vehicle_form(self) -> None:
@@ -319,10 +319,12 @@ class AssetManagementPage(tk.Frame):
         for field in fields:
             UIComponents.checkbox_updates(self, field, vehicle_info)
 
+        tax_status_dropdown = self._create_tax_status_dropdown()
+        
         tax_status_var, checkbox = UIComponents.create_checkbox(
             self, "Tax Status", default_value=False
         )
-        tax_status_dropdown = self._create_tax_status_dropdown()
+    
         # tax_status_dropdown.config(state="disabled")
         tax_status_dropdown.config(state="readonly")
 
