@@ -210,7 +210,7 @@ class AssetManagementPage(tk.Frame):
             self.dynamic_content_frame, text=action,
             command=lambda: process_callback(
                 self.entries, tax_status_dropdown.get()
-                )
+            )
         ).pack(pady=10)
 
     def _create_form_entry(self, field: str) -> None:
@@ -256,9 +256,8 @@ class AssetManagementPage(tk.Frame):
             entries (dict): The dictionary of form entries.
             tax_status (str): The selected tax status of the vehicle.
         """
-        tax_status_dropdown = self._create_tax_status_dropdown
         VehicleProcess.process_add_vehicle(
-            self, entries, tax_status_dropdown
+            self, entries, tax_status
             )
 
     def show_update_vehicle_form(self) -> None:

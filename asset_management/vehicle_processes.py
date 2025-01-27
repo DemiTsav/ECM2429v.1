@@ -11,18 +11,9 @@ class VehicleProcess:
         self.db = db
 
     def process_add_vehicle(
-        self, entries: Dict[str, tk.Entry], tax_status_dropdown: ttk.Combobox
+        self, entries: Dict[str, tk.Entry], tax_status: ttk.Combobox
     ) -> None:
-        """
-        Process the addition of a new vehicle by validating inputs and saving
-        to the database.
-
-        Args:
-            entries (Dict[str, tk.Entry]): Dictionary containing entry fields
-            for vehicle details.
-            tax_status_dropdown (ttk.Combobox): Dropdown widget for selecting
-            the tax status.
-        """
+        # Retrieve values from the entries
         make: str = entries["Make"].get()
         model: str = entries["Model"].get()
         year: str = entries["Year"].get()
@@ -30,7 +21,7 @@ class VehicleProcess:
         fuel_type: str = entries["Fuel Type"].get()
         service_date: str = entries["Service Date"].get()
         tax_due_date: str = entries["Tax Due Date"].get()
-        tax_status: str = tax_status_dropdown.get()
+        # tax_status: str = tax_status)
         errors: List[str] = FieldValidations.validations(
             self, entries, year, service_date, tax_due_date, tax_status
             )

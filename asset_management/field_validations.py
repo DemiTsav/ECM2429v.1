@@ -36,8 +36,7 @@ class FieldValidations:
         for field, entry in entries.items():
             if not entry.get().strip():
                 errors.append(f"{field} cannot be empty.")
-        for field, entry in ["Make","Vehicle Type", "Fuel Type"]:
-            if not FieldValidations.validate_character_input(self, entry):
+            elif field in ["Make", "Model", "Fuel Type", "Vehicle Type"] and not FieldValidations.validate_character_input(self, entry.get()):
                 errors.append(f"Value for {field} must use characters a-z")
         if not FieldValidations.validate_year(self, year):
             errors.append(
@@ -89,7 +88,11 @@ class FieldValidations:
         """
         Validate that typed input is unicode a-z and reject other characters
         """
+        print(value)
+        value = str(value)
+        print(value)
         value_to_validate = value.replace(" ", "")
+        print(value_to_validate)
         if re.fullmatch(r"[a-zA-Z0-9]*", value_to_validate):
             return True
         return False
@@ -120,6 +123,8 @@ class FieldValidations:
         ):
             errors.append("Date fields must be in dd-mm-yy format!")
         for update in updates:
-            if update in ["Make", "Fuel Type", "Vehicle Type"] and not FieldValidations.validate_character_input(self, updates[update]):
-                errors.append(f" value for {update} must use only characters a-z")
+            print(update)
+            if update in ["Make", "Model", "fuel_type", "vehicle_type"]:
+                if not FieldValidations.validate_character_input(self, updates[update]):
+                    errors.append(f" value for {update} must use only characters a-z")
         return errors
