@@ -137,22 +137,22 @@ class AssetManagementPage(tk.Frame):
         """Reset the vehicle table"""
         """display all vehicles from the database"""
         # Clear the existing rows in the table
-        self.reset_table()
+        self._reset_table()
         # Fetch vehicles from the database
         vehicles = self.db.get_all_vehicles()
         if not vehicles:
             return
         # Insert vehicles into the table
-        self.populate_table(vehicles)
+        self._populate_table(vehicles)
 
-    def reset_table(self) -> None:
+    def _reset_table(self) -> None:
         """
         Clear all rows from the vehicle table.
         """
         for row in self.vehicle_table.get_children():
             self.vehicle_table.delete(row)
 
-    def populate_table(self, vehicles: list) -> None:
+    def _populate_table(self, vehicles: list) -> None:
         """
         Populate the vehicle table with data from the database.
 
@@ -177,9 +177,9 @@ class AssetManagementPage(tk.Frame):
         """
         self.clear_dynamic_content()
         self.show_all_vehicles()
-        self.create_add_vehicle_form("Add Vehicle", self.process_add_vehicle)
+        self._create_vehicle_form("Add Vehicle", self._process_add_vehicle)
 
-    def create_add_vehicle_form(
+    def _create_vehicle_form(
             self, action: str, process_callback: callable
             ) -> None:
         """
@@ -205,7 +205,7 @@ class AssetManagementPage(tk.Frame):
         for field in fields:
             self._create_form_entry(field)
 
-        tax_status_dropdown = self.create_tax_status_dropdown()
+        tax_status_dropdown = self._create_tax_status_dropdown()
         tk.Button(
             self.dynamic_content_frame, text=action,
             command=lambda: process_callback(
@@ -225,7 +225,7 @@ class AssetManagementPage(tk.Frame):
         entry.pack(fill="x", pady=2)
         self.entries[field] = entry
 
-    def create_tax_status_dropdown(self) -> ttk.Combobox:
+    def _create_tax_status_dropdown(self) -> ttk.Combobox:
         """
         Create a dropdown for selecting the tax status of the vehicle.
         """
@@ -248,7 +248,7 @@ class AssetManagementPage(tk.Frame):
 
         return tax_status_dropdown
 
-    def process_add_vehicle(self, entries: dict, tax_status: str) -> None:
+    def _process_add_vehicle(self, entries: dict, tax_status: str) -> None:
         """
         Process the addition of a new vehicle to the database.
 
@@ -259,21 +259,6 @@ class AssetManagementPage(tk.Frame):
         VehicleProcess.process_add_vehicle(
             self, entries, tax_status
             )
-        self.show_all_vehicles()
-
-    def process_update_vehicle(self, vehicle_id: str) -> None:
-        """
-        Process the addition of a new vehicle to the database.
-
-        Args:
-            entries (dict): The dictionary of form entries.
-            tax_status (str): The selected tax status of the vehicle.
-        """
-        VehicleProcess.process_update_vehicle(
-            self, vehicle_id
-            )
-        self.clear_dynamic_content()
-        self.show_all_vehicles()
 
     def show_update_vehicle_form(self) -> None:
         """
@@ -333,7 +318,7 @@ class AssetManagementPage(tk.Frame):
         for field in fields:
             UIComponents.checkbox_updates(self, field, vehicle_info)
 
-        tax_status_dropdown = self.create_tax_status_dropdown()
+        tax_status_dropdown = self._create_tax_status_dropdown()
         
         tax_status_var, checkbox = UIComponents.create_checkbox(
             self, "Tax Status", default_value=False
@@ -352,42 +337,64 @@ class AssetManagementPage(tk.Frame):
         tk.Button(
             self.dynamic_content_frame,
             text="Update vehicle",
-            command=lambda: self.process_update_vehicle(
-                vehicle_id
+            command=lambda: VehicleProcess.process_update_vehicle(
+                self, vehicle_id
                 )
         ).pack(pady=10)
         self.show_all_vehicles()
 
     def delete_vehicle_prompt(self) -> None:
         """
-        Display a confirmation prompt to delete selected vehicles.
+        Display a confirmation prompt to delete a vehicle.
         """
-        selected_items = self.vehicle_table.selection()
+        selected_items: list = self.vehicle_table.selection()
         self.clear_dynamic_content()
-        
         if not selected_items:
-            label = tk.Label(
+            tk.Label(
                 self.dynamic_content_frame,
                 text="Please select a vehicle to delete.",
                 fg="blue"
-            )
-            label.pack()
+            ).pack()
             self.show_all_vehicles()
             return
+        else:
+            self.confirm_deletion(selected_items)
 
-        vehicle_ids = [self.vehicle_table.item(item, "values")[0] for item in selected_items]
-        
-        # Pass the callback for post-deletion tasks
-        VehicleProcess.confirm_deletion(
-            self, vehicle_ids, self.refresh_after_deletion
+    def confirm_deletion(self, selected_items):
+        """
+        Display the confirmation message and selected vehicle details
+        """
+        if not selected_items:
+            return
+        delete_button = tk.Button(
+            self.dynamic_content_frame,
+            text="Confirm Deletion",
+            command=VehicleProcess.show_deletion_confirmation(
+                self,
+                selected_items
+                ),
+            state="disabled"  # Disabled until a vehicle is selected
         )
+        UIComponents.enable_delete_button(self, delete_button)
+        # Get selected vehicle information
+        vehicle_id = self.vehicle_table.item(selected_items[0], "values")[0]
+        try:
+            vehicle_info = self.db.get_vehicle(vehicle_id)
+            if not vehicle_info:
+                tk.Label(
+                    self.dynamic_content_frame,
+                    text="Vehicle not found in database.",
+                    fg="red"
+                    ).pack()
+                return
+        except Exception as e:
+            tk.Label(
+                self.dynamic_content_frame,
+                text=f"Error retrieving vehicle: {str(e)}",
+                fg="red"
+                ).pack()
+            return
 
-    def refresh_after_deletion(self) -> None:
-        """
-        Refresh the asset management page after deletion.
-        """
-        self.clear_dynamic_content()
-        self.show_all_vehicles()
 
     def show_search_form(self) -> None:
         """
@@ -426,7 +433,7 @@ class AssetManagementPage(tk.Frame):
         frame = tk.Frame(self.dynamic_content_frame)
         frame.pack(fill="x", pady=2)
 
-        tax_status_dropdown = self.create_tax_status_dropdown()
+        tax_status_dropdown = self._create_tax_status_dropdown()
         tax_status_dropdown.bind(
             "<<ComboboxSelected>>",
             lambda event: VehicleProcess.perform_search(self)

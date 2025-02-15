@@ -64,7 +64,7 @@ class FieldValidations:
         """
         try:
             year = int(year)
-            return 1900 <= year <= datetime.now().year
+            return 2000 <= year <= 2100
         except ValueError:
             return False
 

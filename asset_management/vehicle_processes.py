@@ -21,21 +21,23 @@ class VehicleProcess:
         fuel_type: str = entries["Fuel Type"].get()
         service_date: str = entries["Service Date"].get()
         tax_due_date: str = entries["Tax Due Date"].get()
+        # tax_status: str = tax_status)
         errors: List[str] = FieldValidations.validations(
             self, entries, year, service_date, tax_due_date, tax_status
             )
         if errors:
             UIComponents.show_status_popup("Errors", "\n".join(errors))
             return
+
         try:
             self.db.add_vehicle(
                 make, model, int(year), vehicle_type, fuel_type, service_date,
                 tax_due_date, tax_status
-            )
+                )
             message: str = "Vehicle added successfully!"
             UIComponents.show_status_popup("Success", message)
             UIComponents.clear_form_fields(self)
-            return
+            self.show_all_vehicles()
         except Exception as e:
             UIComponents.show_status_popup(
                 "Error", f"Failed to add vehicle: {str(e)}"
@@ -55,11 +57,12 @@ class VehicleProcess:
         }
         if not updates:
             UIComponents.show_status_popup(
-                "Error", "Select fields to update using the checkboxes"
+                "Error", "No fields selected for update!"
                 )
             return
 
         errors: List[str] = FieldValidations.update_validations(self, updates)
+        print(errors)
         if errors:
             UIComponents.show_status_popup("Error", "\n".join(errors))
             return
@@ -69,45 +72,37 @@ class VehicleProcess:
                 UIComponents.show_status_popup(
                     "Success", "Vehicle updated successfully!"
                     )
-                return
+                self.clear_dynamic_content()
+                self.show_all_vehicles()
             except Exception as e:
                 UIComponents.show_status_popup(
                     "Error", f"Failed to update vehicle: {e}"
                     )
 
-    def confirm_deletion(page: tk.Frame, vehicle_ids: List[str], callback: callable) -> None:
+    def process_delete_vehicles(
+        self, vehicle_info_list: List[Tuple[str]]
+    ) -> None:
         """
-        Handle deletion confirmation and display vehicle info.
-        """
-        if not vehicle_ids:
-            UIComponents.show_status_label(page.dynamic_content_frame, "No vehicles selected.")
-            return
+        Deletes selected vehicles from the database.
 
-        delete_button = tk.Button(
-            page.dynamic_content_frame,
-            text="Confirm Deletion",
-            command=lambda: VehicleProcess.process_delete_vehicles(page, vehicle_ids, callback)
-        )
-        UIComponents.enable_delete_button(page, delete_button)
-        delete_button.pack()
-
-    @staticmethod
-    def process_delete_vehicles(page: tk.Frame, vehicle_ids: List[str], callback: callable) -> None:
+        Args:
+            vehicle_info_list (List[Tuple[str]]): List of tuples containing
+            vehicle IDs and details.
         """
-        Deletes selected vehicles from the database and calls the callback to refresh the UI.
-        """
+        vehicle_ids: List[str] = [vehicle[0] for vehicle in vehicle_info_list]
         try:
             for vehicle_id in vehicle_ids:
-                page.db.delete_vehicle(vehicle_id)
-
-            UIComponents.show_status_popup("Success", f"Deleted {len(vehicle_ids)} vehicle(s) successfully!")
-            
-            # Call the callback to refresh UI
-            if callback:
-                callback()
-                
+                self.db.delete_vehicle(vehicle_id)
+            UIComponents.show_status_popup(
+                "Success",
+                f"Deleted {len(vehicle_info_list)} vehicle(s) successfully!"
+            )
+            self.clear_dynamic_content()
+            self.show_all_vehicles()
         except Exception as e:
-            UIComponents.show_status_popup("Error", f"Failed to delete vehicle(s): {e}")
+            UIComponents.show_status_popup(
+                "Error", f"Failed to delete vehicle(s): {e}"
+                )
 
     def retrieve_vehicle_id(self) -> Optional[str]:
         """
@@ -188,8 +183,7 @@ class VehicleProcess:
         Args:
             selected_items (Tuple[str, ...]): Selected rows from table.
         """
-        for widget in self.dynamic_content_frame.winfo_children():
-            widget.destroy()
+        self.clear_dynamic_content()
         vehicle_info_list = [
             self.vehicle_table.item(item, "values") for item in selected_items
             ]
@@ -236,4 +230,4 @@ class VehicleProcess:
             text="Cancel",
             command=self.clear_dynamic_content
             )
-        cancel_button.pack(side="left", padx=10, pady=10) 
+        cancel_button.pack(side="left", padx=10, pady=10)
