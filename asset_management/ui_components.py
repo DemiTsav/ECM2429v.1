@@ -182,6 +182,9 @@ class UIComponents:
             field = field.replace(" ", "_").lower()
         elif field == "Vehicle Type":
             field = "vehicle_type"
+        formatted_field = field.replace(" ", "_").lower()
+        self.update_entries[formatted_field] = {"checkbox": var, "entry": entry}
+
 
         entry.config(state="normal")
         self.update_entries[field] = {"checkbox": var, "entry": entry}
@@ -259,7 +262,8 @@ class UIComponents:
 
         for entry in self.entries.values():
             entry.delete(0, tk.END)
-        self.tax_status_dropdown.set("")
+        if hasattr(self, 'tax_status_dropdown') and self.tax_status_dropdown:
+            self.tax_status_dropdown.set("") 
 
     def update_vehicle_table(self, vehicles: List[Tuple[Any, ...]]) -> None:
 

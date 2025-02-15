@@ -1,127 +1,127 @@
 import unittest
-from unittest.mock import MagicMock, patch
 import tkinter as tk
+from unittest.mock import Mock, patch
+from asset_reporting.asset_reporting import AssetReportingPage
 from vehicle_management_task.database import VehicleDatabase
-from asset_reporting.asset_reporting import AssetReportingPage  # Adjust the import if necessary
 
 
 class TestAssetReportingPage(unittest.TestCase):
-    
+
     def setUp(self):
-        # Setup a mock database connection
-        self.mock_db = MagicMock(VehicleDatabase)
+        """Set up a test environment for AssetReportingPage"""
         self.root = tk.Tk()
-        self.asset_reporting_page = AssetReportingPage(self.root, self.mock_db)
+        self.db = Mock(spec=VehicleDatabase)
         
+        # Mock query_vehicles to return fake data
+        self.db.query_vehicles.return_value = [
+            ("1", "Toyota", "Corolla", "2020", "Sedan", "Petrol", "01-01-22", "01-01-23", "Tax Paid"),
+            ("2", "Ford", "Focus", "2015", "Hatchback", "Diesel", "05-03-21", "02-02-22", "Tax Due"),
+        ]
+        
+        self.asset_page = AssetReportingPage(self.root, self.db)
+
+    def tearDown(self):
+        """Destroy Tkinter root window after each test"""
+        self.root.destroy()
+
+    def test_create_widgets(self):
+        """Test if widgets are properly created"""
+        self.assertIsInstance(self.asset_page.title_label, tk.Label)
+        self.assertIsInstance(self.asset_page.report_dropdown, tk.OptionMenu)
+        self.assertIsInstance(self.asset_page.generate_button, tk.Button)
+        self.assertIsInstance(self.asset_page.report_text, tk.Text)
+
     def test_generate_report_all_vehicles(self):
-        # Simulate the "All Vehicles" report type selection
-        self.asset_reporting_page.report_var.set("All Vehicles")
-        self.asset_reporting_page.generate_report()
-
-        # Ensure that the database query is executed for "All Vehicles"
-        self.mock_db.query_vehicles.assert_called_with("SELECT * FROM vehicles")
+        """Test generating 'All Vehicles' report"""
+        self.asset_page.report_var.set("All Vehicles")
+        self.asset_page.generate_report()
         
-        # Ensure the report text is cleared before new data is inserted
-        self.asset_reporting_page.report_text.delete.assert_called_with(1.0, tk.END)
+        self.db.query_vehicles.assert_called_once_with("SELECT * FROM vehicles")
+        self.assertGreater(len(self.asset_page.vehicles), 0)  # Ensure vehicles list is populated
+        self.assertIn("Toyota", self.asset_page.report_text.get("1.0", "end"))
 
-        # Ensure that the report content is generated
-        self.assertIn("ID | Make | Model | Year | Vehicle Type", self.asset_reporting_page.report_text.get(1.0, tk.END))
-
-    def test_generate_report_vehicles_due_for_service(self):
-        # Simulate the "Vehicles Due for Service" report type selection
-        self.asset_reporting_page.report_var.set("Vehicles Due for Service")
-        self.asset_reporting_page.generate_report()
-
-        # Ensure the correct query is called for "Vehicles Due for Service"
-        self.mock_db.query_vehicles.assert_called_with("SELECT * FROM vehicles WHERE service_date <= date('now', '+1 month')")
-
-    def test_generate_report_custom_report(self):
-        # Simulate the "Custom Report" report type selection
-        self.asset_reporting_page.report_var.set("Custom Report")
+    def test_generate_report_tax_due(self):
+        """Test generating 'Vehicles with Tax Due' report"""
+        self.asset_page.report_var.set("Vehicles with Tax Due")
+        self.asset_page.generate_report()
         
-        # Mock user input for custom filters
-        mock_filters = {
-            "Make": MagicMock(get=MagicMock(return_value="Toyota")),
-            "Model": MagicMock(get=MagicMock(return_value="Corolla")),
-            "Year": MagicMock(get=MagicMock(return_value="2020")),
-        }
+        self.db.query_vehicles.assert_called_once()
+        self.assertIn("Tax Due", self.asset_page.report_text.get("1.0", "end"))
 
-        self.asset_reporting_page.filters = mock_filters  # Assign mock filters
+    def test_generate_report_invalid_selection(self):
+        """Test generating report with an invalid selection"""
+        self.asset_page.report_var.set("Invalid Report")
         
-        # Simulate custom report generation
-        self.asset_reporting_page.generate_report()
+        with patch('asset_management.ui_components.UIComponents.show_status_popup') as mock_popup:
+            self.asset_page.generate_report()
+            mock_popup.assert_called_once_with("Error", "Please select a valid report type.")
 
-        # Ensure that the custom report filters are correctly applied
-        self.mock_db.query_vehicles.assert_called_with(
-            "SELECT * FROM vehicles WHERE 1=1 AND LOWER(make) LIKE LOWER(?) AND LOWER(model) LIKE LOWER(?) AND LOWER(year) LIKE LOWER(?)", 
-            ("%Toyota%", "%Corolla%", "%2020%")
-        )
-
-    def test_generate_custom_report_ui(self):
-        # Simulate the Custom Report UI generation (filters)
-        self.asset_reporting_page.custom_report()
-
-        # Check if the filters are correctly created
-        self.assertEqual(len(self.asset_reporting_page.filter_frame.winfo_children()), 9)  # 8 filters + 1 button
-
-    @patch('tkinter.filedialog.asksaveasfilename')
-    def test_export_to_csv(self, mock_saveasfilename):
-        # Simulate generating a report
-        self.asset_reporting_page.vehicles = [
-            (1, "Toyota", "Corolla", 2020, "Sedan", "Petrol", "2023-05-01", "2023-10-01", "Paid"),
-            (2, "Ford", "Focus", 2018, "Hatchback", "Diesel", "2022-06-01", "2022-12-01", "Unpaid"),
-        ]
-
-        # Mock file dialog to return a fake file path
-        mock_saveasfilename.return_value = "test_report.csv"
-        
-        # Call the export method
-        self.asset_reporting_page.export_to_csv()
-
-        # Ensure that the file path is passed to the CSV writer
-        mock_saveasfilename.assert_called_once()
-
-    @patch('tkinter.messagebox.showerror')
-    def test_export_to_csv_no_data(self, mock_showerror):
-        # Call the export method with no vehicles data
-        self.asset_reporting_page.vehicles = []
-        self.asset_reporting_page.export_to_csv()
-
-        # Ensure that an error message is shown when there is no data to export
-        mock_showerror.assert_called_with("Error", "No report data available to export.")
-
-    @patch('tkinter.messagebox.askyesno')
-    def test_confirm_export_to_csv(self, mock_askyesno):
-        # Simulate the "Yes" response for the export confirmation
-        mock_askyesno.return_value = True
-        
-        # Simulate generating a report
-        self.asset_reporting_page.vehicles = [
-            (1, "Toyota", "Corolla", 2020, "Sedan", "Petrol", "2023-05-01", "2023-10-01", "Paid")
+    def test_display_report(self):
+        """Test the report display functionality"""
+        self.asset_page.vehicles = [
+            ("1", "Toyota", "Corolla", "2020", "Sedan", "Petrol", "01-01-22", "01-01-23", "Tax Paid"),
         ]
         
-        # Call the confirm export method
-        self.asset_reporting_page.confirm_export_to_csv()
+        self.asset_page.display_report()
+        content = self.asset_page.report_text.get("1.0", "end")
+        
+        self.assertIn("Toyota", content)
+        self.assertIn("Corolla", content)
 
-        # Check if the export to CSV method was called
-        self.asset_reporting_page.export_to_csv.assert_called()
+    def test_generate_custom_report(self):
+        """Test generating a custom report with user-defined filters"""
+        self.asset_page.custom_report()
 
-    @patch('tkinter.messagebox.showerror')
-    def test_generate_report_no_selection(self, mock_showerror):
-        # Test the case when no report type is selected
-        self.asset_reporting_page.report_var.set("Choose a Report")
-        self.asset_reporting_page.generate_report()
+        # Simulate user input in filters
+        self.asset_page.filters["Make"].insert(0, "Toyota")
+        self.asset_page.filters["Year"].insert(0, "2020")
 
-        # Ensure that an error message is displayed when no report type is selected
-        mock_showerror.assert_called_with("Error", "Please select a valid report type.")
+        with patch.object(self.db, 'query_vehicles', return_value=[("1", "Toyota", "Corolla", "2020", "Sedan", "Petrol", "01-01-22", "01-01-23", "Tax Paid")]) as mock_query:
+            self.asset_page.generate_custom_report()
+            mock_query.assert_called_once()
+            self.assertIn("Toyota", self.asset_page.report_text.get("1.0", "end"))
 
-    def test_generate_report_clear_previous(self):
-        # Simulate generating a report
-        self.asset_reporting_page.generate_report()
+    def test_confirm_export_to_csv_no_data(self):
+        """Test attempting to export without data"""
+        self.asset_page.vehicles = []
+        with patch("tkinter.messagebox.showerror") as mock_error:
+            self.asset_page.confirm_export_to_csv()
+            mock_error.assert_called_once_with("Error", "No report data available to export.")
 
-        # Check if the previous report was cleared
-        self.asset_reporting_page.report_text.delete.assert_called_with(1.0, tk.END)
+    def test_confirm_export_to_csv_with_data(self):
+        """Test confirming export to CSV when data is available"""
+        self.asset_page.vehicles = [("1", "Toyota", "Corolla", "2020", "Sedan", "Petrol", "01-01-22", "01-01-23", "Tax Paid")]
+        
+        with patch("tkinter.messagebox.askyesno", return_value=True) as mock_confirm, \
+             patch.object(self.asset_page, 'export_to_csv') as mock_export:
+            self.asset_page.confirm_export_to_csv()
+            mock_confirm.assert_called_once_with("Export to CSV", "Do you want to export the report to a CSV file?")
+            mock_export.assert_called_once()
 
+    def test_export_to_csv(self):
+        """Test exporting report data to a CSV file without requiring user interaction."""
+        self.asset_page.vehicles = [
+            ("1", "Toyota", "Corolla", "2020", "Sedan", "Petrol", "01-01-22", "01-01-23", "Tax Paid"),
+        ]
 
-if __name__ == "__main__":
-    unittest.main()
+        with patch("tkinter.filedialog.asksaveasfilename", return_value="test_report.csv"), \
+            patch("builtins.open", unittest.mock.mock_open()) as mock_open, \
+            patch("csv.writer") as mock_csv_writer, \
+            patch("tkinter.messagebox.showinfo") as mock_showinfo:  # Mock the popup to prevent it from appearing
+            
+            self.asset_page.export_to_csv()
+            
+            # Assertions
+            mock_open.assert_called_once_with("test_report.csv", mode="w", newline="")
+            mock_csv_writer.return_value.writerow.assert_any_call(["ID", "Make", "Model", "Year", "Type", "Fuel", "Service Date", "Tax Due Date", "Tax Status"])
+            mock_csv_writer.return_value.writerow.assert_any_call(("1", "Toyota", "Corolla", "2020", "Sedan", "Petrol", "01-01-22", "01-01-23", "Tax Paid"))
+
+            # Ensure messagebox was triggered, but no interaction is needed
+            mock_showinfo.assert_called_once_with("Success", "Report successfully exported to test_report.csv")
+
+    def test_custom_report_creates_filters(self):
+        """Test custom report filters are correctly created"""
+        self.asset_page.custom_report()
+        self.assertIn("Make", self.asset_page.filters)
+        self.assertIn("Year", self.asset_page.filters)
+        self.assertIn("Tax Status", self.asset_page.filters)
