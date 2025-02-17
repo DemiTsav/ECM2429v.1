@@ -14,6 +14,7 @@ class VehicleProcess:
         self, entries: Dict[str, tk.Entry], tax_status: ttk.Combobox
     ) -> None:
         # Retrieve values from the entries
+        registration: str = entries["Registration"].get()
         make: str = entries["Make"].get()
         model: str = entries["Model"].get()
         year: str = entries["Year"].get()
@@ -21,7 +22,6 @@ class VehicleProcess:
         fuel_type: str = entries["Fuel Type"].get()
         service_date: str = entries["Service Date"].get()
         tax_due_date: str = entries["Tax Due Date"].get()
-        # tax_status: str = tax_status)
         errors: List[str] = FieldValidations.validations(
             self, entries, year, service_date, tax_due_date, tax_status
             )
@@ -31,7 +31,7 @@ class VehicleProcess:
 
         try:
             self.db.add_vehicle(
-                make, model, int(year), vehicle_type, fuel_type, service_date,
+                registration, make, model, int(year), vehicle_type, fuel_type, service_date,
                 tax_due_date, tax_status
                 )
             message: str = "Vehicle added successfully!"
@@ -68,6 +68,7 @@ class VehicleProcess:
             return
         else:
             try:
+                print(updates)
                 self.db.update_vehicle(vehicle_id, updates)
                 UIComponents.show_status_popup(
                     "Success", "Vehicle updated successfully!"
@@ -195,9 +196,10 @@ class VehicleProcess:
             )
         for vehicle_info in vehicle_info_list:
             id = vehicle_info[0]
-            make = vehicle_info[1]
-            model = vehicle_info[2]
-            vehicle_details = f"ID: {id}\nMake: {make}\nModel: {model}"
+            registration = vehicle_info[1]
+            make = vehicle_info[2]
+            model = vehicle_info[3]
+            vehicle_details = f"ID: {id}\nRegistration: {registration}\nMake: {make}\nModel: {model}"
             UIComponents.display_message(
                 self, vehicle_details, "black", font=("Helvetica", 10)
                 )

@@ -69,7 +69,7 @@ class AssetManagementPage(tk.Frame):
             ttk.Treeview: The initialized vehicle table.
         """
         columns = (
-            "ID", "Make", "Model", "Year", "Type", "Fuel",
+            "ID", "Registration", "Make", "Model", "Year", "Type", "Fuel",
             "Service Date", "Tax Due Date", "Tax Status"
         )
         vehicle_table = ttk.Treeview(
@@ -197,7 +197,7 @@ class AssetManagementPage(tk.Frame):
             )
         self.title_label.pack(pady=5)
         fields = [
-            "Make", "Model", "Year", "Vehicle Type", "Fuel Type",
+            "Registration", "Make", "Model", "Year", "Vehicle Type", "Fuel Type",
             "Service Date", "Tax Due Date"
             ]
 
@@ -276,24 +276,20 @@ class AssetManagementPage(tk.Frame):
             return
         else:
             self.confirm_update(selected_items)
-
+            
     def confirm_update(self, selected_items):
         """
         Confirm and execute the update of a selected vehicle.
         """
-        # self.update_button.pack_forget()
-        # selected_items: list = self.vehicle_table.selection()
-        # Get selected vehicle information
-        vehicle_id: str = self.vehicle_table.item(
-            selected_items[0], "values"
-            )[0]
+        vehicle_id: str = self.vehicle_table.item(selected_items[0], "values")[0]
+
         try:
             vehicle_info: dict = self.db.get_vehicle(vehicle_id)
             if not vehicle_info:
                 tk.Label(
                     self.dynamic_content_frame,
                     text="Vehicle not found in database.", fg="red"
-                    ).pack()
+                ).pack()
                 return
         except Exception as e:
             tk.Label(
@@ -307,41 +303,76 @@ class AssetManagementPage(tk.Frame):
             self.dynamic_content_frame,
             text=f"Updating Vehicle ID: {vehicle_id}",
             font=("Helvetica", 14)
-            ).pack(pady=5)
+        ).pack(pady=5)
 
         fields: list = [
-            "Make", "Model", "Year", "Vehicle Type", "Fuel Type",
+            "Registration", "Make", "Model", "Year", "Vehicle Type", "Fuel Type",
             "Service Date", "Tax Due Date"
-            ]
-        self.update_entries = {}
+        ]
+
+        self.update_entries = {}  # Store checkbox and entry widgets
+        editable_fields = {"Service Date", "Tax Due Date", "Tax Status"}
 
         for field in fields:
-            UIComponents.checkbox_updates(self, field, vehicle_info)
+            value = vehicle_info.get(field, "N/A")
 
-        tax_status_dropdown = self._create_tax_status_dropdown()
+            if field in editable_fields:
+                # Create checkbox
+                var = tk.BooleanVar(value=False)  # Initialize as unchecked
+                checkbox = tk.Checkbutton(self.dynamic_content_frame, text=f"{field}", variable=var)
+                checkbox.pack(anchor="w")
+
+                # Create entry field (disabled by default)
+                entry = tk.Entry(self.dynamic_content_frame)
+                entry.insert(0, value)
+                entry.config(state="disabled")  # Initially disabled
+                entry.pack(pady=2)
+
+                # Function to toggle entry state
+                def toggle_entry_state(entry=entry, var=var):
+                    entry.config(state="normal" if var.get() else "disabled")
+
+                # Bind checkbox to toggle entry state
+                var.trace_add("write", lambda *args, entry=entry, var=var: toggle_entry_state(entry, var))
+
+                # Store both checkbox and entry
+                self.update_entries[field] = {"entry": entry, "checkbox": var}
+
+            else:
+                # Read-only fields displayed as labels
+                tk.Label(self.dynamic_content_frame, text=f"{field}: {value}").pack(anchor="w")
+
+        # Tax Status dropdown with checkbox
+        tax_status_var = tk.BooleanVar(value=False)
+        tax_status_checkbox = tk.Checkbutton(self.dynamic_content_frame, text="Tax Status", variable=tax_status_var)
+        tax_status_checkbox.pack(anchor="w")
+
+        tax_status_value = vehicle_info.get("Tax Status", "N/A")  # Get the stored Tax Status value
         
-        tax_status_var, checkbox = UIComponents.create_checkbox(
-            self, "Tax Status", default_value=False
-        )
-    
-        # tax_status_dropdown.config(state="disabled")
-        tax_status_dropdown.config(state="readonly")
+        tax_status_dropdown = self._create_tax_status_dropdown()
+        tax_status_dropdown.set(tax_status_value)  # Set the dropdown value based on stored Tax Status
+        tax_status_dropdown.config(state="disabled")  # Initially disabled
 
-        # Bind checkbox to enable/disable the dropdown
-        tax_status_var.trace_add(
-            "write",
-            lambda *args: UIComponents.toggle_entry_state(
-                self, tax_status_var, tax_status_dropdown
-            )
-        )
+        # Function to toggle tax status dropdown
+        def toggle_tax_status():
+            tax_status_dropdown.config(state="readonly" if tax_status_var.get() else "disabled")
+
+        # Bind checkbox to enable/disable dropdown
+        tax_status_var.trace_add("write", lambda *args: toggle_tax_status())
+
+        # Store Tax Status dropdown
+        self.update_entries["Tax Status"] = {"entry": tax_status_dropdown, "checkbox": tax_status_var}
+
+        # Update button
         tk.Button(
             self.dynamic_content_frame,
             text="Update vehicle",
-            command=lambda: VehicleProcess.process_update_vehicle(
-                self, vehicle_id
-                )
+            command=lambda: VehicleProcess.process_update_vehicle(self, vehicle_id)
         ).pack(pady=10)
+
         self.show_all_vehicles()
+
+
 
     def delete_vehicle_prompt(self) -> None:
         """
@@ -412,7 +443,7 @@ class AssetManagementPage(tk.Frame):
 
         # Fields available for search
         fields: list = [
-            "Make", "Model", "Year", "Vehicle Type", "Fuel Type",
+            "Registration", "Make", "Model", "Year", "Vehicle Type", "Fuel Type",
             "Service Date", "Tax Due Date"
             ]
         self.search_entries = {}

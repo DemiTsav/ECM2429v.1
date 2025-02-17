@@ -12,9 +12,11 @@ class VehicleDatabase:
         """
         Create the vehicles table if it doesn't exist.
         """
+
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS vehicles (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                registration TEXT,
                 make TEXT,
                 model TEXT,
                 year INTEGER,
@@ -27,16 +29,16 @@ class VehicleDatabase:
         ''')
         self.connection.commit()
 
-    def add_vehicle(self, make, model, year, vehicle_type, fuel_type, service_date,
+    def add_vehicle(self, registration, make, model, year, vehicle_type, fuel_type, service_date,
                 tax_due_date, tax_status):
         """
         Add a new vehicle to the database.
         """
         self.cursor.execute('''
-            INSERT INTO vehicles (make, model, year, vehicle_type, fuel_type,
+            INSERT INTO vehicles (registration, make, model, year, vehicle_type, fuel_type,
                             service_date, tax_due_date, tax_status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (make, model, year, vehicle_type, fuel_type, service_date, tax_due_date,
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (registration, make, model, year, vehicle_type, fuel_type, service_date, tax_due_date,
             tax_status))
         self.connection.commit()
 
@@ -53,14 +55,15 @@ class VehicleDatabase:
             return None
         return {
             "id": row[0],
-            "Make": row[1],
-            "Model": row[2],
-            "Year": row[3],
-            "Vehicle Type": row[4],
-            "Fuel Type": row[5],
-            "Service Date": row[6],
-            "Tax Due Date": row[7],
-            "Tax Status": row[8],
+            "Registration": row[1],
+            "Make": row[2],
+            "Model": row[3],
+            "Year": row[4],
+            "Vehicle Type": row[5],
+            "Fuel Type": row[6],
+            "Service Date": row[7],
+            "Tax Due Date": row[8],
+            "Tax Status": row[9],
         }
     
     def get_all_vehicles(self):
@@ -72,7 +75,7 @@ class VehicleDatabase:
     
     def update_vehicle(self, vehicle_id, updates):
         # Construct the SQL SET part dynamically
-        set_clause = ", ".join([f'"{field}" = ?' for field in updates.keys()])
+        set_clause = ", ".join([f'"{(field.replace(" ", "_"))}" = ?' for field in updates.keys()])
         query = f"UPDATE vehicles SET {set_clause} WHERE id = ?"
         
         # Extract the values to update
