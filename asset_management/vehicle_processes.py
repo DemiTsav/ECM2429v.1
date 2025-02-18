@@ -62,7 +62,6 @@ class VehicleProcess:
             return
 
         errors: List[str] = FieldValidations.update_validations(self, updates)
-        print(errors)
         if errors:
             UIComponents.show_status_popup("Error", "\n".join(errors))
             return

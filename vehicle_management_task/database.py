@@ -3,8 +3,13 @@ import sqlite3
 
 class VehicleDatabase:
     def __init__(self, db_name="vehicles.db"):
-        self.db_name = db_name
-        self.connection = sqlite3.connect(self.db_name)
+        # If db_name is already a connection, use that (in-memory connection)
+        if isinstance(db_name, sqlite3.Connection):
+            self.connection = db_name
+        else:
+            self.db_name = db_name
+            self.connection = sqlite3.connect(self.db_name)  # For file-based DB
+        
         self.cursor = self.connection.cursor()
         self.initialize_database()
 
