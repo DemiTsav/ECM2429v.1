@@ -111,7 +111,8 @@ class VehicleDatabase:
         :return: List of tuples containing query results.
         """
         self.cursor.execute(query, params)
-        return self.cursor.fetchall()
+        results = self.cursor.fetchall()
+        return results
 
     def close(self):
         """

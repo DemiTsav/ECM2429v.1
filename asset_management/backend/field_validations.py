@@ -93,8 +93,8 @@ class FieldValidations:
         Perform validations on updated fields.
         """
         errors: List[str] = []
-        if "Service Date" in updates and not FieldValidations.validate_date(updates["Service Date"]):
+        if "Service Date" in updates and not FieldValidations.validate_date(self, updates["Service Date"]):
             errors.append("Date fields must be in dd-mm-yyyy format!")
-        if "Tax Due Date" in updates and not FieldValidations.validate_date(updates["Tax Due Date"]):
+        if "Tax Due Date" in updates and not FieldValidations.validate_date(self, updates["Tax Due Date"]):
             errors.append("Date fields must be in dd-mm-yyyy format!")
         return errors

@@ -1,12 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from asset_management.backend.asset_management_handler import VehicleController
-
-
-class AssetManagementUI(tk.Frame):
-    """
-    A class for displaying the asset management UI.
-    """
+from typing import List, Tuple
 
 class AssetManagementUI(tk.Frame):
     """
@@ -71,9 +66,9 @@ class AssetManagementUI(tk.Frame):
 
         buttons = [
             ("Add Vehicle", self.show_add_vehicle_form),
-            # ("Update Vehicle", self.show_update_vehicle_form),
+            ("Update Vehicle", self.show_update_vehicle_form),
             ("Delete Vehicle", self.show_delete_vehicle_prompt),
-            # ("Search Vehicles", self.show_search_form)
+            ("Search Vehicles", self.show_search_form)
         ]
 
         for text, command in buttons:
@@ -97,7 +92,7 @@ class AssetManagementUI(tk.Frame):
     def show_add_vehicle_form(self) -> None:
         """Display the add vehicle form using grid layout."""
         self.clear_dynamic_content()
-
+        self.refresh_vehicle_table()
         tk.Label(self.dynamic_content_frame, text="Add Vehicle", font=("Helvetica", 14)).grid(row=0, column=0, columnspan=2, pady=5)
 
         entries = {}
@@ -128,6 +123,7 @@ class AssetManagementUI(tk.Frame):
         selected_items: list = self.vehicle_table.selection()
         self.clear_dynamic_content()
         if not selected_items:
+            self.refresh_vehicle_table()
             tk.Label(
                 self.dynamic_content_frame,
                 text="Please select a vehicle to delete.",
@@ -137,8 +133,139 @@ class AssetManagementUI(tk.Frame):
         else:
             VehicleController.confirm_deletion(self, selected_items, self.refresh_vehicle_table, self.clear_dynamic_content)
 
+    def show_update_vehicle_form(self) -> None:
+        """
+        Display the form to update an existing vehicle.
+        """
+        selected_items: list = self.vehicle_table.selection()
+        self.clear_dynamic_content()
+        if not selected_items:
+            self.refresh_vehicle_table()
+            tk.Label(
+                self.dynamic_content_frame,
+                text="Select a vehicle to update.",
+                fg="blue"
+            ).pack()
+            return
+        else:
+            self.display_vehicle_data(selected_items)
+
+    def display_vehicle_data(self, selected_items):
+        vehicle_info, vehicle_id = VehicleController.retrieve_vehicle_info(self, selected_items)
+        tk.Label(
+            self.dynamic_content_frame,
+            text=f"Updating Vehicle ID: {vehicle_id}",
+            font=("Helvetica", 14)
+        ).pack(pady=5)
+
+        update_entries = {}  # Store checkbox and entry widgets
+        editable_fields = {"Service Date", "Tax Due Date", "Tax Status"}
+
+        for i, (field, value) in enumerate(vehicle_info.items()):
+            if field in editable_fields:
+
+                var = tk.BooleanVar(value=False)
+                checkbox = tk.Checkbutton(self.dynamic_content_frame, text=f"{field}", variable=var)
+                checkbox.pack(anchor="w")
+
+                entry = tk.Entry(self.dynamic_content_frame)
+                entry.insert(0, value)
+                entry.config(state="disabled")
+                entry.pack(pady=2)
+
+                def toggle_entry_state(entry=entry, var=var):
+                    entry.config(state="normal" if var.get() else "disabled")
+
+                var.trace_add("write", lambda *args, entry=entry, var=var: toggle_entry_state(entry, var))
+
+                update_entries[field] = {"entry": entry, "checkbox": var}
+
+            else:
+                tk.Label(self.dynamic_content_frame, text=f"{field}: {value}").pack(anchor="w")
+
+        tk.Button(
+            self.dynamic_content_frame,
+            text="Update vehicle",
+            command=lambda: VehicleController.update_vehicle(self, vehicle_id, self.refresh_vehicle_table, self.clear_dynamic_content, update_entries)
+        ).pack(pady=10)
 
     def clear_dynamic_content(self) -> None:
         """Clear all widgets from the dynamic content frame."""
         for widget in self.dynamic_content_frame.winfo_children():
             widget.destroy()
+
+    def show_search_form(self) -> None:
+        """Display the search form and execute search based on criteria."""
+        self.clear_dynamic_content()
+        self.refresh_vehicle_table()  # Ensure this doesn't interfere with the table update
+        tk.Label(self.dynamic_content_frame, text="Search Vehicles", font=("Helvetica", 14, "bold")).pack(pady=5)
+
+        # Create the search fields and tax status dropdown
+        self._create_search_fields()
+        self._create_tax_status_dropdown()
+
+        # Perform the search and update the table
+        results = VehicleController.perform_search(self)
+        print(results)
+        self.update_vehicle_values(results)  # Ensure that results are passed to update the table
+
+    def _create_search_fields(self):
+        self.search_entries = {}
+        for field in [
+            "Registration", "Make", "Model", "Year", "Vehicle Type",
+            "Fuel Type", "Service Date", "Tax Due Date"
+        ]:
+            frame = tk.Frame(self.dynamic_content_frame)
+            frame.pack(fill="x", pady=2)
+
+            tk.Label(frame, text=field, width=15, anchor="w").pack(side="left")
+
+            entry = tk.Entry(frame, width=20)
+            entry.pack(side="left", expand=True, padx=2)
+
+            # Bind key release event to trigger perform_search dynamically
+            entry.bind("<KeyRelease>", lambda event: self.update_vehicle_values(VehicleController.perform_search(self)))
+
+            self.search_entries[field] = entry
+
+
+    def update_vehicle_values(self, results: List[Tuple]) -> None:
+        """
+        Update the vehicle table with new data.
+
+        Args:
+            vehicles (List[Tuple]): List of vehicle details to populate table.
+        """
+        # Clear existing table rows before inserting new ones
+        print(results)
+        for row in self.vehicle_table.get_children():
+            self.vehicle_table.delete(row)
+
+        # Check if there are results to display
+        if not results:
+            print("yo")
+            # Optionally show a message when no results are found (e.g., "No results")
+            print("No results found.")
+        else:
+            # Insert new rows for each vehicle in the results
+            for vehicle in results:
+                print(vehicle)
+                self.vehicle_table.insert("", tk.END, values=vehicle)
+
+
+
+    def _create_tax_status_dropdown(self) -> None:
+        """Create a dropdown for selecting the tax status of the vehicle."""
+        tk.Label(self.dynamic_content_frame, text="Tax Status").pack(anchor="w")
+
+        self.tax_status_var = tk.StringVar()
+        self.tax_status_dropdown = ttk.Combobox(
+            self.dynamic_content_frame,
+            textvariable=self.tax_status_var,
+            values=["", "Tax Paid", "Tax Due", "SORN", "Exempt"],
+            state="readonly"
+        )
+        self.tax_status_dropdown.pack(fill="x", pady=2)
+
+        # Bind selection event to trigger perform_search dynamically
+        self.tax_status_dropdown.bind("<<ComboboxSelected>>", lambda event: self.update_vehicle_values(VehicleController.perform_search(self)))
