@@ -72,7 +72,7 @@ class AssetManagementUI(tk.Frame):
         buttons = [
             ("Add Vehicle", self.show_add_vehicle_form),
             # ("Update Vehicle", self.show_update_vehicle_form),
-            # ("Delete Vehicle", self.show_delete_vehicle_prompt),
+            ("Delete Vehicle", self.show_delete_vehicle_prompt),
             # ("Search Vehicles", self.show_search_form)
         ]
 
@@ -121,8 +121,24 @@ class AssetManagementUI(tk.Frame):
             command=lambda: VehicleController.add_vehicle(self, entries, tax_status, self.refresh_vehicle_table, self.clear_dynamic_content)
         ).grid(row=len(fields) + 2, column=0, columnspan=2, pady=10)
 
+    def show_delete_vehicle_prompt(self) -> None:
+        """
+        Display a confirmation prompt to delete a vehicle.
+        """
+        selected_items: list = self.vehicle_table.selection()
+        self.clear_dynamic_content()
+        if not selected_items:
+            tk.Label(
+                self.dynamic_content_frame,
+                text="Please select a vehicle to delete.",
+                fg="blue"
+            ).pack()
+            return
+        else:
+            VehicleController.confirm_deletion(self, selected_items, self.refresh_vehicle_table, self.clear_dynamic_content)
+
+
     def clear_dynamic_content(self) -> None:
         """Clear all widgets from the dynamic content frame."""
         for widget in self.dynamic_content_frame.winfo_children():
             widget.destroy()
-

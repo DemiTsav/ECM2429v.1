@@ -24,16 +24,16 @@ class FieldValidations:
         for field, entry in entries.items():
             if not entry.get().strip():
                 errors.append(f"{field} cannot be empty.")
-            elif field in ["Make", "Registration", "Model", "Fuel Type", "Vehicle Type"] and not self.validate_character_input(entry.get()):
+            elif field in ["Make", "Registration", "Model", "Fuel Type", "Vehicle Type"] and not FieldValidations.validate_character_input(entry.get()):
                 errors.append(f"Value for {field} must use characters a-z")
-        if not self.validate_year(year):
+        if not FieldValidations.validate_year(year):
             errors.append(
                 "Year must be a valid number between 1900 and the current year"
             )
-        if not self.validate_date(service_date):
-            errors.append("Service Date must be in dd-mm-yy format.")
-        if not self.validate_date(tax_due_date):
-            errors.append("Tax Due Date must be in dd-mm-yy format.")
+        if not FieldValidations.validate_date(service_date):
+            errors.append("Service Date must be in dd-mm-yyyy format.")
+        if not FieldValidations.validate_date(tax_due_date):
+            errors.append("Tax Due Date must be in dd-mm-yyyy format.")
         if not tax_status:
             errors.append("Tax Status must be selected.")
 
@@ -93,8 +93,8 @@ class FieldValidations:
         Perform validations on updated fields.
         """
         errors: List[str] = []
-        if "Service Date" in updates and not self.validate_date(updates["Service Date"]):
+        if "Service Date" in updates and not FieldValidations.validate_date(updates["Service Date"]):
             errors.append("Date fields must be in dd-mm-yyyy format!")
-        if "Tax Due Date" in updates and not self.validate_date(updates["Tax Due Date"]):
+        if "Tax Due Date" in updates and not FieldValidations.validate_date(updates["Tax Due Date"]):
             errors.append("Date fields must be in dd-mm-yyyy format!")
         return errors

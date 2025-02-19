@@ -285,25 +285,26 @@ class UIComponents:
         for widget in self.dynamic_content_frame.winfo_children():
             widget.destroy()
 
-    def confirm_deletion(self, delete_button: tk.Button) -> None:
-        UIComponents.enable_delete_button(self, delete_button)
-        selected_items = self.vehicle_table.selection()
-        vehicle_id = self.vehicle_table.item(
-            selected_items[0], "values"
-            )[0]
-        try:
-            vehicle_info = self.db.get_vehicle(vehicle_id)
-            if not vehicle_info:
-                tk.Label(
-                    self.dynamic_content_frame,
-                    text="Vehicle not found in database.",
-                    fg="red"
-                    ).pack()
-                return
-        except Exception as e:
-            tk.Label(
-                self.dynamic_content_frame,
-                text=f"Error retrieving vehicle: {str(e)}",
-                fg="red"
-                ).pack()
-            return
+    def display_vehicle_info(self, vehicle_info: Dict[str, str]) -> None:
+
+        """
+        Display vehicle information in the UI.
+        """
+
+        vehicle_details = (
+            f"Vehicle ID: {vehicle_info["id"]}\n"
+            f"Registration: {vehicle_info["Registration"]}\n"
+            f"Make: {vehicle_info["Make"]}\n"
+        )
+        tk.Label(
+            self.dynamic_content_frame,
+            text="Selected Vehicle:",
+            font=("Arial", 12, "bold"),
+            fg="black"
+        ).pack()
+        tk.Label(
+            self.dynamic_content_frame,
+            text=vehicle_details,
+            fg="black"
+        ).pack()
+        return

@@ -1,15 +1,18 @@
 from asset_management.database import VehicleDatabase
 from asset_management.backend.field_validations import FieldValidations
 from asset_management.frontend.ui_components import UIComponents
+import tkinter as tk
+
 
 class VehicleController:
     """
     Handles business logic for vehicle operations.
     """
 
-    def __init__(self, db: VehicleDatabase):
+    def __init__(self, db: VehicleDatabase, vehicle_table):
         """Initialize the controller with a database instance."""
         self.db = db
+        self.vehicle_table = vehicle_table
 
     def get_all_vehicles(self):
         """Retrieve all vehicles from the database."""
@@ -46,3 +49,55 @@ class VehicleController:
             except Exception as e:
                 UIComponents.show_status_popup("Error", [str(e)])
 
+
+    def confirm_deletion(self, selected_items, refresh_table_callback, clear_content_callback) -> bool:
+        """Confirm deletion and enable delete button if a vehicle is selected."""
+        if not selected_items:
+            return False
+        try:
+            vehicle_id = self.vehicle_table.item(selected_items[0], "values")[0]
+            vehicle_info = VehicleDatabase.get_vehicle(self, vehicle_id)
+            if not vehicle_info:
+                tk.Label(
+                    self.dynamic_content_frame,
+                    text="Vehicle not found in database.",
+                    fg="red"
+                ).pack()
+                return False
+            tk.Label()
+        except Exception as e:
+            tk.Label(
+                self.dynamic_content_frame,
+                text=f"Error retrieving vehicle: {str(e)}",
+                fg="red"
+            ).pack()
+            return False
+        
+        UIComponents.display_vehicle_info(self, vehicle_info)
+
+        delete_button = UIComponents.create_button(
+            self,
+            self.dynamic_content_frame,
+            "Delete Vehicle",
+            lambda: VehicleController.delete_vehicle(self, vehicle_id, refresh_table_callback, clear_content_callback),
+            padx=10
+        ).pack()
+
+        cancel_button = UIComponents.create_button(
+            self,
+            self.dynamic_content_frame,
+            "Cancel",
+            clear_content_callback,
+            padx=10
+        ).pack()
+
+    def delete_vehicle(self, vehicle_id, refresh_vehicle_table, clear_dynamic_content):
+        """Delete a vehicle from the database."""
+        try:
+            VehicleDatabase.delete_vehicle(self, vehicle_id)
+            UIComponents.show_status_popup("Success", "Vehicle deleted successfully.")
+            refresh_vehicle_table()
+            clear_dynamic_content()
+        except Exception as e:
+            UIComponents.show_status_popup("Error", str(e))
+            clear_dynamic_content()

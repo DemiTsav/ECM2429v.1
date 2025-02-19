@@ -41,7 +41,7 @@ class AssetManagementPage(tk.Frame):
         Create and pack the title label at the top of the page.
         """
         self.title_label = tk.Label(
-            self, text="Council Asset Management", font=("Helvetica", 20)
+            self, text="Fleet Asset Management", font=("Helvetica", 20)
         )
         self.title_label.pack(pady=20)
 
