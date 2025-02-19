@@ -24,8 +24,13 @@ class FieldValidations:
         for field, entry in entries.items():
             if not entry.get().strip():
                 errors.append(f"{field} cannot be empty.")
-            elif field in ["Make", "Registration", "Model", "Fuel Type", "Vehicle Type"] and not FieldValidations.validate_character_input(self, entry.get()):
-                errors.append(f"Value for {field} must use characters a-z")
+            elif field in ["Make", "Registration", "Model", "Fuel Type",
+                           "Vehicle Type"
+                           ] and not FieldValidations.validate_character_input(
+                               self, entry.get()):
+                errors.append(
+                    f"Value for {field} must use characters a-z"
+                )
         if not FieldValidations.validate_year(self, year):
             errors.append(
                 "Year must be a valid number between 1900 and the current year"
@@ -51,11 +56,11 @@ class FieldValidations:
         try:
             # Try to parse the date
             date_obj = datetime.strptime(date_str, "%d-%m-%Y")
-            
+
             # Ensure the year is greater than 2000
             if date_obj.year <= 2000:
                 return False
-            
+
             return True
         except ValueError:
             # If parsing fails, it's an invalid date format
@@ -74,10 +79,10 @@ class FieldValidations:
     def validate_year(self, year: Union[str, int]) -> bool:
         """
         Validate the year to check if it's between 1900 and the current year.
-        
+
         Args:
             year (Union[str, int]): The year to validate.
-        
+
         Returns:
             bool: True if the year is valid, False otherwise.
         """
@@ -93,8 +98,14 @@ class FieldValidations:
         Perform validations on updated fields.
         """
         errors: List[str] = []
-        if "Service Date" in updates and not FieldValidations.validate_date(self, updates["Service Date"]):
+        if "Service Date" in updates and not FieldValidations.validate_date(
+            self,
+            updates["Service Date"]
+                ):
             errors.append("Date fields must be in dd-mm-yyyy format!")
-        if "Tax Due Date" in updates and not FieldValidations.validate_date(self, updates["Tax Due Date"]):
+        if "Tax Due Date" in updates and not FieldValidations.validate_date(
+            self,
+            updates["Tax Due Date"]
+                ):
             errors.append("Date fields must be in dd-mm-yyyy format!")
         return errors

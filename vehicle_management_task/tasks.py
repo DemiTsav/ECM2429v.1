@@ -1,4 +1,4 @@
-from vehicle_management_task.database import VehicleDatabase
+from asset_management.database import VehicleDatabase
 
 
 def run_sample_tasks(db):

@@ -1,5 +1,5 @@
 import tkinter as tk
-from vehicle_management_task.database import VehicleDatabase
+from asset_management.database import VehicleDatabase
 from vehicle_management_task import tasks
 from asset_management.frontend.ui_manager import AssetManagementUI
 import threading

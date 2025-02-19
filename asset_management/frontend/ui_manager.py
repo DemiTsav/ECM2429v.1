@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 from asset_management.backend.asset_management_handler import VehicleController
+from asset_management.frontend.asset_reporting import AssetReportingPage
 from typing import List, Tuple
+from asset_management.backend.asset_management_handler import VehicleDatabase
+
 
 class AssetManagementUI(tk.Frame):
     """
@@ -18,15 +21,13 @@ class AssetManagementUI(tk.Frame):
         """
         super().__init__(parent)
         self.controller = controller
-        self.connection = self.controller.connection  # Use the connection from the controller
-        self.cursor = self.controller.cursor  # Use the cursor from the controller
-        self.entries = {}
+        self.connection = self.controller.connection
+        self.cursor = self.controller.cursor
         self.update_entries = {}
         self.search_entries = {}
 
         self.pack(fill="both", expand=True)
         self.create_widgets()
-
 
     def create_widgets(self) -> None:
         """Initialize all widgets and layout."""
@@ -38,7 +39,11 @@ class AssetManagementUI(tk.Frame):
 
     def _create_title_label(self) -> None:
         """Create and pack the title label."""
-        title_label = tk.Label(self, text="Council Asset Management", font=("Helvetica", 20))
+        title_label = tk.Label(
+            self,
+            text="Council Asset Management",
+            font=("Helvetica", 20)
+            )
         title_label.pack(pady=20)
 
     def _create_vehicle_table(self) -> None:
@@ -46,14 +51,24 @@ class AssetManagementUI(tk.Frame):
         self.vehicle_table_frame = tk.Frame(self)
         self.vehicle_table_frame.pack(pady=10, fill="both", expand=True)
 
-        columns = ("ID", "Registration", "Make", "Model", "Year", "Type", "Fuel", "Service Date", "Tax Due Date", "Tax Status")
-        self.vehicle_table = ttk.Treeview(self.vehicle_table_frame, columns=columns, show="headings", selectmode='browse')
+        columns = ("ID", "Registration", "Make", "Model", "Year", "Type",
+                   "Fuel", "Service Date", "Tax Due Date", "Tax Status")
+        self.vehicle_table = ttk.Treeview(
+            self.vehicle_table_frame,
+            columns=columns,
+            show="headings",
+            selectmode='browse'
+            )
 
         for col in columns:
             self.vehicle_table.heading(col, text=col)
             self.vehicle_table.column(col, width=120)
 
-        scrollbar = tk.Scrollbar(self.vehicle_table_frame, orient="vertical", command=self.vehicle_table.yview)
+        scrollbar = tk.Scrollbar(
+            self.vehicle_table_frame,
+            orient="vertical",
+            command=self.vehicle_table.yview
+            )
         self.vehicle_table.configure(yscrollcommand=scrollbar.set)
 
         self.vehicle_table.pack(side="left", fill="both", expand=True)
@@ -68,11 +83,18 @@ class AssetManagementUI(tk.Frame):
             ("Add Vehicle", self.show_add_vehicle_form),
             ("Update Vehicle", self.show_update_vehicle_form),
             ("Delete Vehicle", self.show_delete_vehicle_prompt),
-            ("Search Vehicles", self.show_search_form)
+            ("Search Vehicles", self.show_search_form),
+            ("Asset Reporting", lambda: self.open_new_window(
+                self.open_asset_reporting_page,
+                self.controller
+                ))
         ]
 
         for text, command in buttons:
-            tk.Button(actions_frame, text=text, command=command, padx=10).pack(side="left", padx=5)
+            tk.Button(actions_frame, text=text, command=command, padx=10).pack(
+                side="left",
+                padx=5
+                )
 
     def _create_dynamic_content_frame(self) -> None:
         """Create the dynamic content frame that holds forms."""
@@ -93,27 +115,42 @@ class AssetManagementUI(tk.Frame):
         """Display the add vehicle form using grid layout."""
         self.clear_dynamic_content()
         self.refresh_vehicle_table()
-        tk.Label(self.dynamic_content_frame, text="Add Vehicle", font=("Helvetica", 14)).grid(row=0, column=0, columnspan=2, pady=5)
+        tk.Label(self.dynamic_content_frame, text="Add Vehicle",
+                 font=("Helvetica", 14)).grid(row=0, column=0, columnspan=2,
+                                              pady=5)
 
         entries = {}
-        fields = ["Registration", "Make", "Model", "Year", "Vehicle Type", "Fuel Type", "Service Date", "Tax Due Date"]
+        fields = ["Registration", "Make", "Model", "Year", "Vehicle Type",
+                  "Fuel Type", "Service Date", "Tax Due Date"]
 
         for i, field in enumerate(fields):
-            tk.Label(self.dynamic_content_frame, text=field).grid(row=i+1, column=0, sticky="w", padx=5, pady=2)
+            tk.Label(self.dynamic_content_frame, text=field).grid(
+                row=i+1, column=0, sticky="w", padx=5, pady=2)
             entry = tk.Entry(self.dynamic_content_frame)
             entry.grid(row=i+1, column=1, sticky="ew", padx=5, pady=2)
             entries[field] = entry  # Store entry widget reference
 
-        tk.Label(self.dynamic_content_frame, text="Tax Status").grid(row=len(fields) + 1, column=0, sticky="w", padx=5, pady=2)
+        tk.Label(self.dynamic_content_frame, text="Tax Status").grid(
+            row=len(fields) + 1, column=0, sticky="w", padx=5, pady=2)
 
-        tax_status = ttk.Combobox(self.dynamic_content_frame, values=["Tax Paid", "Tax Due", "SORN", "Exempt"], state="readonly")
-        tax_status.grid(row=len(fields) + 1, column=1, sticky="ew", padx=5, pady=2)
+        tax_status = ttk.Combobox(self.dynamic_content_frame, values=[
+            "Tax Paid", "Tax Due", "SORN", "Exempt"
+            ],
+            state="readonly")
+        tax_status.grid(row=len(fields) + 1, column=1, sticky="ew", padx=5,
+                        pady=2)
 
         # Button passes 'entries' and gets tax_status when clicked
         tk.Button(
-            self.dynamic_content_frame, 
-            text="Add Vehicle", 
-            command=lambda: VehicleController.add_vehicle(self, entries, tax_status, self.refresh_vehicle_table, self.clear_dynamic_content)
+            self.dynamic_content_frame,
+            text="Add Vehicle",
+            command=lambda: VehicleController.add_vehicle(
+                self,
+                entries,
+                tax_status,
+                self.refresh_vehicle_table,
+                self.clear_dynamic_content
+                )
         ).grid(row=len(fields) + 2, column=0, columnspan=2, pady=10)
 
     def show_delete_vehicle_prompt(self) -> None:
@@ -131,7 +168,12 @@ class AssetManagementUI(tk.Frame):
             ).pack()
             return
         else:
-            VehicleController.confirm_deletion(self, selected_items, self.refresh_vehicle_table, self.clear_dynamic_content)
+            VehicleController.confirm_deletion(
+                self,
+                selected_items,
+                self.refresh_vehicle_table,
+                self.clear_dynamic_content
+                )
 
     def show_update_vehicle_form(self) -> None:
         """
@@ -151,7 +193,10 @@ class AssetManagementUI(tk.Frame):
             self.display_vehicle_data(selected_items)
 
     def display_vehicle_data(self, selected_items):
-        vehicle_info, vehicle_id = VehicleController.retrieve_vehicle_info(self, selected_items)
+        vehicle_info, vehicle_id = VehicleController.retrieve_vehicle_info(
+            self,
+            selected_items
+            )
         tk.Label(
             self.dynamic_content_frame,
             text=f"Updating Vehicle ID: {vehicle_id}",
@@ -165,7 +210,11 @@ class AssetManagementUI(tk.Frame):
             if field in editable_fields:
 
                 var = tk.BooleanVar(value=False)
-                checkbox = tk.Checkbutton(self.dynamic_content_frame, text=f"{field}", variable=var)
+                checkbox = tk.Checkbutton(
+                    self.dynamic_content_frame,
+                    text=f"{field}",
+                    variable=var
+                    )
                 checkbox.pack(anchor="w")
 
                 entry = tk.Entry(self.dynamic_content_frame)
@@ -176,17 +225,25 @@ class AssetManagementUI(tk.Frame):
                 def toggle_entry_state(entry=entry, var=var):
                     entry.config(state="normal" if var.get() else "disabled")
 
-                var.trace_add("write", lambda *args, entry=entry, var=var: toggle_entry_state(entry, var))
+                var.trace_add("write", lambda *args, entry=entry,
+                              var=var: toggle_entry_state(entry, var))
 
                 update_entries[field] = {"entry": entry, "checkbox": var}
 
             else:
-                tk.Label(self.dynamic_content_frame, text=f"{field}: {value}").pack(anchor="w")
+                tk.Label(self.dynamic_content_frame,
+                         text=f"{field}: {value}").pack(anchor="w")
 
         tk.Button(
             self.dynamic_content_frame,
             text="Update vehicle",
-            command=lambda: VehicleController.update_vehicle(self, vehicle_id, self.refresh_vehicle_table, self.clear_dynamic_content, update_entries)
+            command=lambda: VehicleController.update_vehicle(
+                self,
+                vehicle_id,
+                self.refresh_vehicle_table,
+                self.clear_dynamic_content,
+                update_entries
+                )
         ).pack(pady=10)
 
     def clear_dynamic_content(self) -> None:
@@ -197,17 +254,17 @@ class AssetManagementUI(tk.Frame):
     def show_search_form(self) -> None:
         """Display the search form and execute search based on criteria."""
         self.clear_dynamic_content()
-        self.refresh_vehicle_table()  # Ensure this doesn't interfere with the table update
-        tk.Label(self.dynamic_content_frame, text="Search Vehicles", font=("Helvetica", 14, "bold")).pack(pady=5)
-
-        # Create the search fields and tax status dropdown
+        self.refresh_vehicle_table()
+        tk.Label(self.dynamic_content_frame,
+                 text="Search Vehicles",
+                 font=("Helvetica", 14, "bold")
+                 ).pack(pady=5)
         self._create_search_fields()
         self._create_tax_status_dropdown()
 
-        # Perform the search and update the table
         results = VehicleController.perform_search(self)
         print(results)
-        self.update_vehicle_values(results)  # Ensure that results are passed to update the table
+        self.update_vehicle_values(results)
 
     def _create_search_fields(self):
         self.search_entries = {}
@@ -224,10 +281,13 @@ class AssetManagementUI(tk.Frame):
             entry.pack(side="left", expand=True, padx=2)
 
             # Bind key release event to trigger perform_search dynamically
-            entry.bind("<KeyRelease>", lambda event: self.update_vehicle_values(VehicleController.perform_search(self)))
+            entry.bind(
+                "<KeyRelease>",
+                lambda event: self.update_vehicle_values(
+                    VehicleController.perform_search(self)
+                    ))
 
             self.search_entries[field] = entry
-
 
     def update_vehicle_values(self, results: List[Tuple]) -> None:
         """
@@ -236,27 +296,20 @@ class AssetManagementUI(tk.Frame):
         Args:
             vehicles (List[Tuple]): List of vehicle details to populate table.
         """
-        # Clear existing table rows before inserting new ones
-        print(results)
         for row in self.vehicle_table.get_children():
             self.vehicle_table.delete(row)
 
-        # Check if there are results to display
-        if not results:
-            print("yo")
-            # Optionally show a message when no results are found (e.g., "No results")
-            print("No results found.")
-        else:
+        if results:
             # Insert new rows for each vehicle in the results
             for vehicle in results:
                 print(vehicle)
                 self.vehicle_table.insert("", tk.END, values=vehicle)
 
-
-
     def _create_tax_status_dropdown(self) -> None:
         """Create a dropdown for selecting the tax status of the vehicle."""
-        tk.Label(self.dynamic_content_frame, text="Tax Status").pack(anchor="w")
+        tk.Label(self.dynamic_content_frame, text="Tax Status").pack(
+            anchor="w"
+            )
 
         self.tax_status_var = tk.StringVar()
         self.tax_status_dropdown = ttk.Combobox(
@@ -268,4 +321,22 @@ class AssetManagementUI(tk.Frame):
         self.tax_status_dropdown.pack(fill="x", pady=2)
 
         # Bind selection event to trigger perform_search dynamically
-        self.tax_status_dropdown.bind("<<ComboboxSelected>>", lambda event: self.update_vehicle_values(VehicleController.perform_search(self)))
+        self.tax_status_dropdown.bind(
+            "<<ComboboxSelected>>",
+            lambda event: self.update_vehicle_values(
+                VehicleController.perform_search(self)
+                ))
+
+    def open_new_window(self, create_widget: callable, *args) -> None:
+        """Initilise a new window for asset reporting functions"""
+        new_window = tk.Toplevel()
+        new_window.title("Asset Reporting")
+        create_widget(new_window, *args)
+
+    def open_asset_reporting_page(
+            self, new_window: tk.Toplevel, db: VehicleDatabase
+            ) -> None:
+        """
+        Open the page to generate asset reports.
+        """
+        AssetReportingPage(new_window, db)

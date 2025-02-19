@@ -3,13 +3,12 @@ import sqlite3
 
 class VehicleDatabase:
     def __init__(self, db_name="vehicles.db"):
-        # If db_name is already a connection, use that (in-memory connection)
         if isinstance(db_name, sqlite3.Connection):
             self.connection = db_name
         else:
             self.db_name = db_name
-            self.connection = sqlite3.connect(self.db_name)  # For file-based DB
-        
+            self.connection = sqlite3.connect(self.db_name)
+
         self.cursor = self.connection.cursor()
         self.initialize_database()
 
@@ -34,18 +33,19 @@ class VehicleDatabase:
         ''')
         self.connection.commit()
 
-    def add_vehicle(self, registration, make, model, year, vehicle_type, fuel_type, service_date, tax_due_date, tax_status):
+    def add_vehicle(self, registration, make, model, year, vehicle_type,
+                    fuel_type, service_date, tax_due_date, tax_status):
         """
         Add a new vehicle to the database.
         """
         self.cursor.execute('''
-            INSERT INTO vehicles (registration, make, model, year, vehicle_type, fuel_type,
-                                service_date, tax_due_date, tax_status)
+            INSERT INTO vehicles (registration, make, model, year,
+                            vehicle_type, fuel_type, service_date,
+                            tax_due_date, tax_status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (registration, make, model, year, vehicle_type, fuel_type, service_date, tax_due_date, tax_status))
-
+        ''', (registration, make, model, year, vehicle_type, fuel_type,
+              service_date, tax_due_date, tax_status))
         self.connection.commit()
-
 
     def get_vehicle(self, vehicle_id):
         """
@@ -54,7 +54,8 @@ class VehicleDatabase:
         :param vehicle_id: ID of the vehicle.
         :return: Dictionary with vehicle details or None if not found.
         """
-        self.cursor.execute("SELECT * FROM vehicles WHERE id = ?", (vehicle_id,))
+        self.cursor.execute("SELECT * FROM vehicles WHERE id = ?",
+                            (vehicle_id,))
         row = self.cursor.fetchone()
         if row is None:
             return None
@@ -70,24 +71,24 @@ class VehicleDatabase:
             "Tax Due Date": row[8],
             "Tax Status": row[9],
         }
-    
+
     def get_all_vehicles(self):
         """Fetch all vehicles from the database."""
         query = "SELECT * FROM vehicles"
         self.cursor.execute(query)
-        vehicles = self.cursor.fetchall()  # This fetches all rows from the query
+        vehicles = self.cursor.fetchall()
         return vehicles
-    
+
     def update_vehicle(self, vehicle_id, updates):
         # Construct the SQL SET part dynamically
-        set_clause = ", ".join([f'"{(field.replace(" ", "_"))}" = ?' for field in updates.keys()])
+        set_clause = ", ".join([
+            f'"{(field.replace(" ", "_"))}" = ?' for field in updates.keys()
+            ])
         query = f"UPDATE vehicles SET {set_clause} WHERE id = ?"
-        
-        # Extract the values to update
+
         values = list(updates.values())
         values.append(vehicle_id)  # Add vehicle_id to the parameters
-        
-        # Execute the query
+
         self.cursor.execute(query, values)
         self.connection.commit()
 
@@ -111,8 +112,7 @@ class VehicleDatabase:
         :return: List of tuples containing query results.
         """
         self.cursor.execute(query, params)
-        results = self.cursor.fetchall()
-        return results
+        return self.cursor.fetchall()
 
     def close(self):
         """

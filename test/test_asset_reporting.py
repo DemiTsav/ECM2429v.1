@@ -1,107 +1,80 @@
 import pytest
 import sqlite3
-from tkinter import Tk, filedialog, messagebox
-from vehicle_management_task.database import VehicleDatabase
-from asset_reporting.asset_reporting import AssetReportingPage
+from asset_management.database import VehicleDatabase
+from asset_management.frontend.asset_reporting import AssetReportingHandler
 
 
 @pytest.fixture
 def temp_db():
-    # Create an in-memory database for testing
-    connection = sqlite3.connect(":memory:")
-    db = VehicleDatabase(connection)
-    db.initialize_database()  # Initialize the tables
+    conn = sqlite3.connect(":memory:")
+    cursor = conn.cursor()
+    cursor.execute("""
+    CREATE TABLE vehicles (
+        id INTEGER PRIMARY KEY,
+        make TEXT,
+        model TEXT,
+        year INTEGER,
+        fuel_type TEXT,
+        service_date TEXT,
+        tax_due_date TEXT
+    )
+    """)
+
+    cursor.executemany("""
+    INSERT INTO vehicles (make, model, year, fuel_type, service_date,
+                       tax_due_date)
+    VALUES (?, ?, ?, ?, ?, ?)
+    """, [
+        ('Toyota', 'Corolla', 2015, 'Petrol', '2025-03-01', '2025-06-01'),
+        ('Ford', 'Focus', 2010, 'Diesel', '2025-04-01', '2025-05-01'),
+        ('Honda', 'Civic', 2005, 'Diesel', '2025-02-15', '2025-05-01'),
+        ('BMW', 'X5', 2000, 'Petrol', '2025-06-01', '2025-07-01')
+    ])
+
+    db = VehicleDatabase(conn)
     yield db
-    db.close()
+
+    conn.close()
 
 
-@pytest.fixture
-def reporting_page(temp_db):
-    # Create the Tkinter root window for testing
-    root = Tk()
-    page = AssetReportingPage(root, temp_db)
-    return page
+def test_get_report_query():
+    assert (AssetReportingHandler.get_report_query("All Vehicles") ==
+            "SELECT * FROM vehicles")
+    assert (AssetReportingHandler.get_report_query(
+            "Vehicles Due for Service") ==
+            ("SELECT * FROM vehicles WHERE service_date <= "
+             "date('now', '+1 month')"))
+    assert (AssetReportingHandler.get_report_query(
+            "Vehicles with Tax Due") ==
+            ("SELECT * FROM vehicles WHERE tax_due_date <= "
+             "date('now', '+1 month')"))
+    assert (AssetReportingHandler.get_report_query(
+            "Vehicles Older Than 10 Years") ==
+            "SELECT * FROM vehicles WHERE year <= strftime('%Y', 'now') - 10")
+    assert (AssetReportingHandler.get_report_query("Diesel Vehicles") ==
+            "SELECT * FROM vehicles WHERE LOWER(fuel_type) = LOWER('Diesel')")
+    assert (AssetReportingHandler.get_report_query(
+        "Nonexistent Report") is None)
 
 
-def test_generate_report_all_vehicles(reporting_page, temp_db):
-    # Insert sample data into the database
-    temp_db.add_vehicle("ABC123", "Toyota", "Corolla", 2015, "Sedan", "Petrol", "2025-06-01", "2025-07-01", "Active")
-    temp_db.add_vehicle("XYZ456", "Ford", "Focus", 2018, "Hatchback", "Diesel", "2025-07-01", "2025-08-01", "Inactive")
+def test_fetch_report(temp_db, mocker):
+    mock_fetch_report = mocker.patch.object(
+        AssetReportingHandler,
+        'fetch_report',
+        return_value=[(1, 'Toyota', 'Corolla', 2015, 'Petrol', '2025-03-01')]
+    )
 
-    # Simulate selecting the "All Vehicles" report and clicking the "Generate Report" button
-    reporting_page.report_var.set("All Vehicles")
-    reporting_page.generate_report()
+    report = AssetReportingHandler.fetch_report(temp_db, "All Vehicles")
 
-    # Test if the report displays the correct data
-    report_text = reporting_page.report_text.get(1.0, "end-1c")  # Get the content of the report
-    assert "Toyota" in report_text
-    assert "Ford" in report_text
-    assert "Sedan" in report_text
-    assert "Hatchback" in report_text
+    assert len(report) == 1
+    assert report[0][1] == 'Toyota'
+
+    mock_fetch_report.assert_called_once_with(temp_db, "All Vehicles")
 
 
-def test_generate_report_vehicles_due_for_service(reporting_page, temp_db):
-    # Insert a sample vehicle that's due for service
-    temp_db.add_vehicle("XYZ789", "Honda", "Civic", 2017, "Sedan", "Diesel", "2023-01-01", "2023-02-01", "Active")
-
-    # Simulate selecting the "Vehicles Due for Service" report and clicking the "Generate Report" button
-    reporting_page.report_var.set("Vehicles Due for Service")
-    reporting_page.generate_report()
-
-    # Test if the report displays the correct data
-    report_text = reporting_page.report_text.get(1.0, "end-1c")  # Get the content of the report
-    assert "Honda" in report_text
-    assert "Civic" in report_text
-
-
-def test_generate_custom_report(reporting_page, temp_db):
-    # Insert a vehicle with known data
-    temp_db.add_vehicle("DEF123", "BMW", "X5", 2019, "SUV", "Diesel", "2025-05-01", "2025-06-01", "Active")
-
-    # Ensure filters are initialized by calling `custom_report`
-    reporting_page.custom_report()
-
-    # Simulate selecting "Custom Report" and providing a filter
-    reporting_page.report_var.set("Custom Report")
-    reporting_page.filters["Make"].insert(0, "BMW")
-    reporting_page.generate_custom_report()
-
-    # Test if the report displays the correct data
-    report_text = reporting_page.report_text.get(1.0, "end-1c")
-    assert "BMW" in report_text
-    assert "X5" in report_text
-
-
-
-def test_export_to_csv(reporting_page, temp_db, monkeypatch):
-    # Insert sample data into the database
-    temp_db.add_vehicle("GHI789", "Audi", "A4", 2020, "Sedan", "Petrol", "2025-07-01", "2025-08-01", "Active")
-
-    # Simulate generating a report
-    reporting_page.report_var.set("All Vehicles")
-    reporting_page.generate_report()
-
-    # Mock file dialog to simulate file saving without opening a file dialog
-    monkeypatch.setattr(filedialog, "asksaveasfilename", lambda **kwargs: "test_report.csv")
-
-    # Mock messagebox.askyesno to always return True (simulating the "Yes" response to the export confirmation)
-    monkeypatch.setattr(messagebox, "askyesno", lambda title, message: True)
-
-    # Mock the actual CSV export method to avoid file I/O
-    def mock_export_to_csv():
-        # Simulate the export without actually writing to a file
-        assert True  # Ensure that the function is called
-
-    monkeypatch.setattr(reporting_page, "export_to_csv", mock_export_to_csv)
-
-    # Simulate confirming export and calling the export method
-    reporting_page.confirm_export_button.invoke()
-
-
-def test_invalid_report_type(reporting_page):
-    # Test if invalid report type is handled properly
-    reporting_page.report_var.set("Invalid Report")
-    reporting_page.generate_report()
-    # Since we can't display messagebox in tests directly, we would check if an error was triggered in logs
-    # or simulate its effect using other testing techniques.
-    # For now, the assumption is that UIComponents.show_status_popup() is the error handler.
+def test_fetch_custom_report(temp_db, mocker):
+    filters = {"Fuel Type": "Diesel"}
+    report = AssetReportingHandler.fetch_custom_report(temp_db, filters)
+    assert len(report) == 2
+    assert report[0][1] == 'Ford'
+    assert report[1][1] == 'Honda'

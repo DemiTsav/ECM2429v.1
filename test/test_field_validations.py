@@ -1,118 +1,88 @@
 import pytest
-from tkinter import Tk, Entry
-from asset_management.field_validations import FieldValidations
+from datetime import datetime
+from asset_management.backend.field_validations import FieldValidations
+
 
 @pytest.fixture
-def mock_entries():
-    # Mock the tkinter entry widgets
-    root = Tk()
-    entry1 = Entry(root)
-    entry2 = Entry(root)
-    entry3 = Entry(root)
-    
-    entry1.insert(0, "Toyota")  # Valid input
-    entry2.insert(0, "AVD34R")  # Valid input for Registration
-    entry3.insert(0, "Camry")   # Valid input for Model (used for valid tests)
-    
+def field_validations():
+    """Fixture to create an instance of FieldValidations."""
+    return FieldValidations()
+
+
+@pytest.fixture
+def mock_entries(mocker):
+    """Mock entry fields with valid values."""
     return {
-        "Make": entry1,
-        "Registration": entry2,
-        "Model": entry3,
-        "Fuel Type": entry1,
-        "Vehicle Type": entry1
+        "Make": mocker.Mock(get=mocker.Mock(return_value="Toyota")),
+        "Registration": mocker.Mock(get=mocker.Mock(return_value="ABC123")),
+        "Model": mocker.Mock(get=mocker.Mock(return_value="Corolla")),
+        "Fuel Type": mocker.Mock(get=mocker.Mock(return_value="Petrol")),
+        "Vehicle Type": mocker.Mock(get=mocker.Mock(return_value="Sedan"))
     }
 
-# Test the validations method for non-empty fields and valid characters
-def test_validations_valid(mock_entries):
-    validations = FieldValidations()
-    
-    # Inputs
-    entries = mock_entries
-    year = 2020
-    service_date = "15-05-2025"
-    tax_due_date = "15-06-2025"
-    tax_status = "Tax Paid"
-    
-    errors = validations.validations(entries, year, service_date, tax_due_date, tax_status)
-    
-    assert errors is None  # No errors for valid input
 
-# Test the validations method for empty fields
-def test_validations_empty_field(mock_entries):
-    validations = FieldValidations()
-    
-    # Making Registration field empty
-    mock_entries["Registration"].delete(0, "end")
-    
-    entries = mock_entries
-    year = 2020
-    service_date = "15-05-2025"
-    tax_due_date = "15-06-2025"
-    tax_status = "Tax Paid"
-    
-    errors = validations.validations(entries, year, service_date, tax_due_date, tax_status)
-    
-    assert "Registration cannot be empty." in errors
+@pytest.mark.parametrize("year, expected", [("2020", True), ("1899", False),
+                                            (str(datetime.now().year + 1),
+                                             False), ("abcd", False)])
+def test_validate_year(field_validations, year, expected):
+    """Test the validate_year function."""
+    assert field_validations.validate_year(year) == expected
 
-# Test the validations method for invalid character input
-def test_validations_invalid_character(mock_entries):
-    validations = FieldValidations()
-    
-    # Making Model field invalid (should only contain alphabetic characters)
-    mock_entries["Model"].delete(0, "end")
-    mock_entries["Model"].insert(0, "@@@")  # Invalid value for Model
-    
-    entries = mock_entries
-    year = 2020
-    service_date = "15-05-2025"
-    tax_due_date = "15-06-2025"
-    tax_status = "Tax Paid"
-    
-    errors = validations.validations(entries, year, service_date, tax_due_date, tax_status)
-    print(errors)
-    assert "Value for Model must use characters a-z" in errors
 
-# Test the year validation (valid year)
-def test_validate_year_valid():
-    validations = FieldValidations()
-    assert validations.validate_year(2020) is True
+@pytest.mark.parametrize("date_str, expected", [
+    ("01-01-2025", True),
+    ("31-12-1999", False),
+    ("2025-01-01", False),
+    ("32-01-2025", False),
+    ("abc-def-ghij", False)
+])
+def test_validate_date(field_validations, date_str, expected):
+    """Test the validate_date function."""
+    assert field_validations.validate_date(date_str) == expected
 
-# Test the year validation (invalid year)
-def test_validate_year_invalid():
-    validations = FieldValidations()
-    assert validations.validate_year(1899) is False
 
-# Test the date validation (valid date)
-def test_validate_date_valid():
-    validations = FieldValidations()
-    assert validations.validate_date("15-05-2025") is True
+@pytest.mark.parametrize("value, expected",
+                         [("Toyota", True),
+                          ("Car123", True),
+                          ("Car_123", False),
+                          ("Car@!", False)])
+def test_validate_character_input(field_validations, value, expected):
+    """Test the validate_character_input function."""
+    assert field_validations.validate_character_input(value) == expected
 
-# Test the date validation (invalid date format)
-def test_validate_date_invalid_format():
-    validations = FieldValidations()
-    assert validations.validate_date("2025-05-15") is False
 
-# Test the date validation (valid date but year <= 2000)
-def test_validate_date_invalid_year():
-    validations = FieldValidations()
-    assert validations.validate_date("15-05-1999") is False
+def test_validations_success(field_validations, mock_entries):
+    """Test the validations function with valid inputs."""
+    errors = field_validations.validations(
+        mock_entries, year="2020", service_date="01-01-2025",
+        tax_due_date="01-06-2025", tax_status="Valid"
+    )
+    assert errors is None
 
-# Test the update_validations method with a valid update
-def test_update_validations_valid():
-    validations = FieldValidations()
-    updates = {
-        "Service Date": "15-05-2025",
-        "Tax Due Date": "15-06-2025"
-    }
-    errors = validations.update_validations(updates)
-    assert errors == []  # No errors for valid dates
 
-# Test the update_validations method with invalid date updates
-def test_update_validations_invalid():
-    validations = FieldValidations()
-    updates = {
-        "Service Date": "15-05-1999",  # Invalid date year
-        "Tax Due Date": "2025-06-15"   # Invalid format
-    }
-    errors = validations.update_validations(updates)
+def test_validations_failure(field_validations, mock_entries):
+    """Test the validations function with invalid inputs."""
+    mock_entries["Make"].get.return_value = ""
+    errors = field_validations.validations(
+        mock_entries, year="1899", service_date="2025-01-01",
+        tax_due_date="32-13-2025", tax_status=None
+    )
+    assert len(errors) > 0
+    assert "Make cannot be empty." in errors
+    assert "Year must be a valid number between 1900 and the current year" \
+           in errors
+    assert "Service Date must be in dd-mm-yy format." in errors
+    assert "Tax Due Date must be in dd-mm-yy format." in errors
+    assert "Tax Status must be selected." in errors
+
+
+def test_update_validations(field_validations):
+    """Test update_validations function with valid and invalid dates."""
+    valid_updates = {"Service Date": "01-01-2025",
+                     "Tax Due Date": "15-06-2025"}
+    invalid_updates = {"Service Date": "2025/01/01",
+                       "Tax Due Date": "invalid-date"}
+
+    assert field_validations.update_validations(valid_updates) == []
+    errors = field_validations.update_validations(invalid_updates)
     assert "Date fields must be in dd-mm-yyyy format!" in errors
