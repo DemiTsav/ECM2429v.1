@@ -58,6 +58,9 @@ def test_generate_custom_report(reporting_page, temp_db):
     # Insert a vehicle with known data
     temp_db.add_vehicle("DEF123", "BMW", "X5", 2019, "SUV", "Diesel", "2025-05-01", "2025-06-01", "Active")
 
+    # Ensure filters are initialized by calling `custom_report`
+    reporting_page.custom_report()
+
     # Simulate selecting "Custom Report" and providing a filter
     reporting_page.report_var.set("Custom Report")
     reporting_page.filters["Make"].insert(0, "BMW")
@@ -67,6 +70,7 @@ def test_generate_custom_report(reporting_page, temp_db):
     report_text = reporting_page.report_text.get(1.0, "end-1c")
     assert "BMW" in report_text
     assert "X5" in report_text
+
 
 
 def test_export_to_csv(reporting_page, temp_db, monkeypatch):
