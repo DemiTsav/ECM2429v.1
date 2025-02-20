@@ -3,11 +3,21 @@ from tkinter import messagebox, filedialog
 import csv
 from asset_management.backend.report_generation import AssetReportingHandler
 from asset_management.frontend.ui_components import UIComponents
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 
 class AssetReportingPage(tk.Frame):
+    """
+    Asset Reporting Page for generating and displaying reports.
+    """
     def __init__(self, parent: tk.Widget, db: object) -> None:
+        """
+        Initializes the Asset Reporting Page.
+
+        Args:
+            parent (tk.Widget): The parent widget.
+            db (object): The database connection instance.
+        """
         super().__init__(parent)
         self.db = db
         self.pack(fill="both", expand=True)
@@ -28,7 +38,7 @@ class AssetReportingPage(tk.Frame):
         self.report_var = tk.StringVar()
         self.report_var.set("Choose a Report")
 
-        report_options = [
+        report_options: List[str] = [
             "All Vehicles", "Vehicles Due for Service",
             "Vehicles with Tax Due", "Vehicles Older Than 10 Years",
             "Diesel Vehicles", "Custom Report"
@@ -123,7 +133,16 @@ class AssetReportingPage(tk.Frame):
         self.generate_custom_report_button.pack(pady=10)
 
     def create_filter(self, window: tk.Frame, label_text: str) -> tk.Entry:
-        """Creates a filter entry field."""
+        """
+        Creates a filter entry field.
+
+        Args:
+            window (tk.Frame): The frame where the filter is placed.
+            label_text (str): The label for the filter field.
+
+        Returns:
+            tk.Entry: The created entry field.
+        """
         label = tk.Label(window, text=f"Filter by {label_text}:")
         label.pack(pady=5)
         entry = tk.Entry(window)
@@ -132,7 +151,7 @@ class AssetReportingPage(tk.Frame):
 
     def generate_custom_report(self) -> None:
         """Fetches and displays a custom report based on user input."""
-        filters = {
+        filters: Dict[str, str] = {
             field: entry.get().strip()
             for field, entry in self.filters.items()
             if entry.get().strip()

@@ -2,7 +2,7 @@ from asset_management.database import VehicleDatabase
 from asset_management.backend.field_validations import FieldValidations
 from asset_management.frontend.ui_components import UIComponents
 import tkinter as tk
-from typing import List, Dict
+from typing import List, Dict, Optional, Tuple
 
 
 class VehicleController:
@@ -10,18 +10,44 @@ class VehicleController:
     Handles business logic for vehicle operations.
     """
 
-    def __init__(self, db: VehicleDatabase, vehicle_table):
-        """Initialize the controller with a database instance."""
+    def __init__(self, db: VehicleDatabase, vehicle_table) -> None:
+        """
+        Initialize the controller with a database instance.
+
+        Args:
+            db (VehicleDatabase): The database instance.
+            vehicle_table: The UI table displaying vehicles.
+        """
         self.db = db
         self.vehicle_table = vehicle_table
 
-    def get_all_vehicles(self):
-        """Retrieve all vehicles from the database."""
+    def get_all_vehicles(self) -> List[Dict[str, str]]:
+        """
+        Retrieve all vehicles from the database.
+
+        Returns:
+            List[Dict[str, str]]: A list of vehicle records.
+        """
         return self.db.get_all_vehicles()
 
-    def add_vehicle(self, entries, tax_status, refresh_table_callback,
-                    clear_content_callback):
-        """Process adding a new vehicle."""
+    def add_vehicle(
+        self,
+        entries: Dict[str, tk.Entry],
+        tax_status: tk.StringVar,
+        refresh_table_callback,
+        clear_content_callback
+    ) -> None:
+        """
+        Process adding a new vehicle.
+
+        Args:
+            entries (Dict[str, tk.Entry]): Dictionary of input fields.
+            tax_status (tk.StringVar): The selected tax status.
+            refresh_table_callback (Callable[[], None]): Function to refresh
+            the table.
+            clear_content_callback (Callable[[], None]): Function to clear
+            input fields.
+        """
         registration = entries["Registration"].get()
         make = entries["Make"].get()
         model = entries["Model"].get()
@@ -31,14 +57,12 @@ class VehicleController:
         service_date = entries["Service Date"].get()
         tax_due_date = entries["Tax Due Date"].get()
         tax_status = tax_status.get()
-        errors = FieldValidations.validations(
+
+        errors: List[str] = FieldValidations.validations(
             self, entries, year, service_date, tax_due_date, tax_status
         )
         if errors:
-            errors_list = []
-            for error in errors:
-                errors_list.append(error)
-            formatted_errors = "\n".join(errors_list)
+            formatted_errors = "\n".join(errors)
             UIComponents.show_status_popup("Success", formatted_errors)
         else:
             try:
@@ -53,10 +77,24 @@ class VehicleController:
             except Exception as e:
                 UIComponents.show_status_popup("Error", [str(e)])
 
-    def confirm_deletion(self, selected_items, refresh_table_callback,
-                         clear_content_callback) -> bool:
-        """Confirm deletion and enable delete button"""
-        """if a vehicle is selected."""
+    def confirm_deletion(
+        self, selected_items: List[str],
+        refresh_table_callback,
+        clear_content_callback
+    ) -> bool:
+        """
+        Confirm deletion and enable delete button if a vehicle is selected.
+
+        Args:
+            selected_items (List[str]): List of selected vehicle IDs.
+            refresh_table_callback (callable[[], None]): Function to refresh
+            the table.
+            clear_content_callback (callable[[], None]): Function to clear UI
+            components.
+
+        Returns:
+            bool: True if deletion confirmed, False otherwise.
+        """
         if not selected_items:
             return False
         vehicle_info, vehicle_id = VehicleController.retrieve_vehicle_info(
@@ -82,9 +120,21 @@ class VehicleController:
             padx=10
         ).pack()
 
-    def delete_vehicle(self, vehicle_id, refresh_vehicle_table,
-                       clear_dynamic_content):
-        """Delete a vehicle from the database."""
+    def delete_vehicle(
+        self, vehicle_id: str,
+        refresh_vehicle_table,
+        clear_dynamic_content
+    ) -> None:
+        """
+        Delete a vehicle from the database.
+
+        Args:
+            vehicle_id (str): The ID of the vehicle to delete.
+            refresh_vehicle_table (callable[[], None]): Function to refresh
+            the vehicle table.
+            clear_dynamic_content (callable[[], None]): Function to clear UI
+            components.
+        """
         try:
             VehicleDatabase.delete_vehicle(self, vehicle_id)
             UIComponents.show_status_popup("Success",
@@ -95,7 +145,19 @@ class VehicleController:
             UIComponents.show_status_popup("Error", str(e))
             clear_dynamic_content()
 
-    def retrieve_vehicle_info(self, selected_items):
+    def retrieve_vehicle_info(
+            self, selected_items: List[str]
+            ) -> Optional[Tuple[Dict[str, str], str]]:
+        """
+        Retrieve vehicle information from the database.
+
+        Args:
+            selected_items (List[str]): List of selected vehicle IDs.
+
+        Returns:
+            Optional[Tuple[Dict[str, str], str]]: Vehicle information and ID
+            if found, otherwise None.
+        """
         try:
             vehicle_id = self.vehicle_table.item(selected_items[0],
                                                  "values")[0]
@@ -117,8 +179,12 @@ class VehicleController:
             ).pack()
             return False
 
-    def update_vehicle(self, vehicle_id: str, refresh_vehicle_table,
-                       clear_dynamic_content, update_entries) -> None:
+    def update_vehicle(
+        self, vehicle_id: str,
+        refresh_vehicle_table,
+        clear_dynamic_content,
+        update_entries: Dict[str, Dict[str, tk.Widget]]
+    ) -> None:
         """
         Process the update of a vehicle's details.
 

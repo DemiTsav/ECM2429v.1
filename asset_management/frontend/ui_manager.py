@@ -9,6 +9,10 @@ from asset_management.backend.asset_management_handler import VehicleDatabase
 class AssetManagementUI(tk.Frame):
     """
     A class for displaying the asset management UI.
+
+    Inherits from Tkinter's Frame class. This UI allows users to interact
+    with asset data including adding, updating, deleting, and searching for
+    vehicles.
     """
 
     def __init__(self, parent: tk.Tk, controller: VehicleController) -> None:
@@ -192,7 +196,13 @@ class AssetManagementUI(tk.Frame):
         else:
             self.display_vehicle_data(selected_items)
 
-    def display_vehicle_data(self, selected_items):
+    def display_vehicle_data(self, selected_items: list) -> None:
+        """
+        Display vehicle data to be updated.
+
+        Args:
+            selected_items (list): The selected items from the vehicle table.
+        """
         vehicle_info, vehicle_id = VehicleController.retrieve_vehicle_info(
             self,
             selected_items
@@ -266,7 +276,8 @@ class AssetManagementUI(tk.Frame):
         print(results)
         self.update_vehicle_values(results)
 
-    def _create_search_fields(self):
+    def _create_search_fields(self) -> None:
+        """Create search fields for searching vehicles."""
         self.search_entries = {}
         for field in [
             "Registration", "Make", "Model", "Year", "Vehicle Type",
@@ -320,7 +331,6 @@ class AssetManagementUI(tk.Frame):
         )
         self.tax_status_dropdown.pack(fill="x", pady=2)
 
-        # Bind selection event to trigger perform_search dynamically
         self.tax_status_dropdown.bind(
             "<<ComboboxSelected>>",
             lambda event: self.update_vehicle_values(
@@ -328,15 +338,27 @@ class AssetManagementUI(tk.Frame):
                 ))
 
     def open_new_window(self, create_widget: callable, *args) -> None:
-        """Initilise a new window for asset reporting functions"""
+        """
+        Initialize a new window for asset reporting functions.
+
+        Args:
+            create_widget (Callable): The function to create the widget in the
+            new window.
+            *args: Additional arguments to pass to the widget creation
+            function.
+        """
         new_window = tk.Toplevel()
         new_window.title("Asset Reporting")
         create_widget(new_window, *args)
 
-    def open_asset_reporting_page(
-            self, new_window: tk.Toplevel, db: VehicleDatabase
-            ) -> None:
+    def open_asset_reporting_page(self, new_window: tk.Toplevel,
+                                  db: VehicleDatabase) -> None:
         """
         Open the page to generate asset reports.
+
+        Args:
+            new_window (tk.Toplevel): The newly created window for asset
+            reporting.
+            db (VehicleDatabase): The database connection instance.
         """
         AssetReportingPage(new_window, db)
