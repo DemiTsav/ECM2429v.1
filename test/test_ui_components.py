@@ -100,3 +100,23 @@ def test_display_message(ui_components):
     ]
     assert any(label["text"] == "Test Message" for label in labels)
     assert any(label["fg"] == "red" for label in labels)
+
+
+def test_checkbox_updates(ui_components, mocker):
+    vehicle_info = {"Tax Due Date": "2025-05-01", "Fuel Type": "Petrol"}
+    ui_components.checkbox_updates("Tax Due Date", vehicle_info)
+    field_frame = ui_components.dynamic_content_frame.winfo_children()[0]
+    checkbox = field_frame.winfo_children()[0]
+    entry = field_frame.winfo_children()[2]
+
+    mock_var = mocker.MagicMock()
+    mock_var.get.return_value = 0
+
+    checkbox.configure(variable=mock_var)
+
+    ui_components.toggle_entry_state(mock_var, entry)
+    assert entry["state"] == "disabled"
+
+    mock_var.get.return_value = 1
+    ui_components.toggle_entry_state(mock_var, entry)
+    assert entry["state"] == "readonly"

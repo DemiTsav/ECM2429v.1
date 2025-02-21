@@ -1,0 +1,108 @@
+#This code can be pasted into https://www.planttext.com/ to generate data flow diagrams for each Add, Update, Delete and Search/ FRetrieve function
+@startuml
+actor User
+entity "AssetManagementUI" as AMUI
+entity "VehicleController" as VCtrl
+entity "VehicleDatabase" as VDB
+entity "UIComponents" as UICM
+entity "FieldValidations" as FV
+entity "ReportGeneration" as RG
+entity "AssetReportingPage" as ARP
+
+' Update Function Sequence
+== Update Function ==
+
+User -> AMUI : Click 'Update'
+AMUI -> AMUI : Check if Row Selected
+AMUI -> User : Prompt to Select Row (if no row selected)
+User -> AMUI : Select Row
+AMUI -> VDB : Retrieve Vehicle Info for Selected Row
+VDB -> VCtrl : Format Vehicle Data
+VCtrl -> AMUI : Display Form with Vehicle Data
+AMUI -> UICM : Create 'Update Vehicle' Button
+User -> AMUI : Input Updates (e.g., License Plate, Tax Status)
+AMUI -> VCtrl : Process User Input
+VCtrl -> FV : Validate Fields
+FV -> VCtrl : Return Validation Results
+VCtrl -> VDB : Write Updates to Vehicle Table (if no errors)
+AMUI -> AMUI : Update UI with Updated Info
+User -> AMUI : View Updated Info
+
+' Delete Function Sequence
+== Delete Function ==
+
+User -> AMUI : Select Row
+AMUI -> AMUI : Check if Row Selected
+AMUI -> User : Prompt to Select Row (if no row selected)
+User -> AMUI : Select Row
+AMUI -> VDB : Retrieve Vehicle Info for Selected Row
+VDB -> AMUI : Display Vehicle Info
+AMUI -> UICM : Create 'Confirm Deletion' and 'Cancel' Buttons
+User -> AMUI : Click 'Cancel'
+AMUI -> AMUI : Abort Action
+User -> AMUI : Click 'Confirm Deletion'
+AMUI -> VDB : Delete Vehicle Entry
+VDB -> VDB : Remove Vehicle Data from Table
+AMUI -> AMUI : Update UI to Reflect Deletion
+User -> AMUI : View Updated UI (no vehicle displayed)
+
+' Add Vehicle Function Sequence
+== Add Vehicle Function ==
+
+User -> AMUI : Click 'Add Vehicle'
+AMUI -> AMUI : Display Form for Adding Vehicle
+User -> AMUI : Input Vehicle Info (e.g., License Plate, Tax Status)
+User -> AMUI : Click 'Add Vehicle'
+AMUI -> UICM : Create 'Add Vehicle' Button
+AMUI -> VCtrl : Process User Input
+VCtrl -> FV : Validate Fields
+FV -> VCtrl : Return Validation Results
+alt If Valid
+    VCtrl -> VDB : Add Vehicle Entry to Database
+    VDB -> VDB : Insert Vehicle Data into Table
+    AMUI -> AMUI : Update UI with New Vehicle Info
+    User -> AMUI : View Added Vehicle Info
+else If Invalid
+    UICM -> AMUI : Display Error Popup
+    AMUI -> User : Show Error Message
+end
+
+' Search Vehicle Function Sequence
+== Search Vehicle Function ==
+
+User -> AMUI : Click 'Search Vehicles'
+AMUI -> AMUI : Display Search Form
+User -> AMUI : Input Search Criteria (e.g., License Plate)
+User -> AMUI : Click 'Search'
+AMUI -> VCtrl : Process Search Request Dynamically
+VCtrl -> VDB : Query Database with Search Criteria
+VDB -> VDB : Perform Search
+VDB -> AMUI : Return Search Results
+AMUI -> AMUI : Display Search Results
+User -> AMUI : View Search Results
+
+' Generate Report Function Sequence
+== Generate Report Function ==
+
+User -> AMUI : Click 'Generate Report'
+AMUI -> AMUI : Open New Window for Report Options
+AMUI -> User : Display Report Types (Custom or Predefined)
+User -> AMUI : Select Report Type (Custom or Predefined)
+alt If Custom Report Selected
+    AMUI -> AMUI : Display Custom Report Filters
+    User -> AMUI : Input Custom Report Filters
+    User -> AMUI : Click 'Generate Report'
+    AMUI -> RG : Process Filters and Generate Report
+    RG -> VDB : Retrieve Vehicle Data Based on Filters
+    VDB -> RG : Return Filtered Vehicle Data
+    RG -> ARP : Display Custom Report
+    User -> ARP : View Custom Report
+else If Predefined Report Selected
+    AMUI -> RG : Generate Predefined Report
+    RG -> VDB : Retrieve Vehicle Data Based on Predefined Filters
+    VDB -> RG : Return Vehicle Data
+    RG -> ARP : Display Predefined Report
+    User -> ARP : View Predefined Report
+end
+
+@enduml

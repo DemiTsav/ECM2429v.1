@@ -162,7 +162,6 @@ class VehicleController:
             vehicle_id = self.vehicle_table.item(selected_items[0],
                                                  "values")[0]
             vehicle_info = VehicleDatabase.get_vehicle(self, vehicle_id)
-            print(vehicle_info)
             if not vehicle_info:
                 tk.Label(
                     self.dynamic_content_frame,
