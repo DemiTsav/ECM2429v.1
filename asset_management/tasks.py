@@ -2,6 +2,7 @@ from asset_management.database import VehicleDatabase
 
 db = VehicleDatabase()
 
+
 def run_sample_tasks(db):
     """
     Perform sample tasks on the VehicleDatabase.

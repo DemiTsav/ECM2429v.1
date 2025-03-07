@@ -73,7 +73,7 @@ def test_generate_report(temp_db, mocker):
 
 def test_generate_custom_report(temp_db, mocker):
     """
-    Tests the generate_custom_report() function to ensure it retrieves 
+    Tests the generate_custom_report() function to ensure it retrieves
     the correct vehicle data based on user-selected filters.
     """
     mock_fetch_custom_report = mocker.patch.object(
@@ -94,7 +94,7 @@ def test_generate_custom_report(temp_db, mocker):
 
 def test_export_to_csv(temp_db, mocker):
     """
-    Tests the export_to_csv() function to ensure that report data 
+    Tests the export_to_csv() function to ensure that report data
     is correctly written to a CSV file.
     """
     mock_asksaveasfilename = mocker.patch.object(
