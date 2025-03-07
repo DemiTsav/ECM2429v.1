@@ -71,18 +71,51 @@ def test_validations_failure(field_validations, mock_entries):
     assert "Make cannot be empty." in errors
     assert "Year must be a valid number between 1900 and the current year" \
            in errors
-    assert "Service Date must be in dd-mm-yy format." in errors
-    assert "Tax Due Date must be in dd-mm-yy format." in errors
+    assert "Service Date must be in dd-mm-yyyy format." in errors
+    assert "Tax Due Date must be in dd-mm-yyyy format." in errors
     assert "Tax Status must be selected." in errors
 
 
 def test_update_validations(field_validations):
     """Test update_validations function with valid and invalid dates."""
     valid_updates = {"Service Date": "01-01-2025",
-                     "Tax Due Date": "15-06-2025"}
+                     "Tax Due Date": "15-06-2025", "Tax Status": "Tax Paid"}
     invalid_updates = {"Service Date": "2025/01/01",
-                       "Tax Due Date": "invalid-date"}
+                       "Tax Due Date": "invalid-date",
+                       "Tax Status": "InvalidStatus"}
 
-    assert field_validations.update_validations(valid_updates) == []
+    assert field_validations.update_validations(valid_updates) is None
     errors = field_validations.update_validations(invalid_updates)
-    assert "Date fields must be in dd-mm-yyyy format!" in errors
+    assert "Service date field must be in dd-mm-yyyy format!" in errors
+    assert "Tax due date field must be in dd-mm-yyyy format!" in errors
+    assert "Tax Status must be one of the following: Tax Paid, Tax Due, " \
+           "SORN, Exempt." in errors
+
+
+def test_update_validations_tax_due_date(field_validations):
+    """Test update_validations function with valid & invalid tax due dates."""
+    valid_updates = {"Service Date": "01-01-2025",
+                     "Tax Due Date": "N/A", "Tax Status": "SORN"}
+    invalid_updates = {"Service Date": "01-01-2025",
+                       "Tax Due Date": "15-06-2025", "Tax Status": "SORN"}
+
+    assert field_validations.update_validations(valid_updates) is None
+    errors = field_validations.update_validations(invalid_updates)
+    assert "Tax Due Date must be 'N/A' when Tax Status is SORN or " \
+           "Exempt." in errors
+
+
+def test_update_validations_tax_status(field_validations):
+    """Test update_validations function with valid and invalid tax statuses."""
+    invalid_tax_date_updates = {"Service Date": "01-01-2025",
+                                "Tax Due Date": "15-06-2025",
+                                "Tax Status": "Exempt"}
+    invalid_updates = {"Service Date": "01-01-2025",
+                       "Tax Due Date": "15-06-2025",
+                       "Tax Status": "InvalidStatus"}
+
+    tax_due_date_error = field_validations.update_validations(
+        invalid_tax_date_updates)
+    assert "Tax Due Date must be 'N/A'" in tax_due_date_error[0]
+    tax_status_errors = field_validations.update_validations(invalid_updates)
+    assert "Tax Status must be one of the following" in tax_status_errors[0]

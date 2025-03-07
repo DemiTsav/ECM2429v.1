@@ -4,8 +4,12 @@
 This is a Tkinter-based Python application for managing council assets, specifically vehicles. The system allows users to add, update, delete, and search for vehicles within a local SQLite database. The interface is designed to be intuitive and dynamically updates search results based on user input.
 
 ## Prerequisites
+Ensure you have Python with Tkinter support installed
+
+For Ubuntu/Debian, you may need to install: sudo apt-get install python3-tk
 
 This project requires **Python 3.12**. Ensure you have it installed, as some features, such as the `datetime` module, may behave differently in earlier versions.
+
 
 ## Running the Project
 

@@ -48,9 +48,17 @@ class FieldValidations:
                 "Year must be a valid number between 1900 and the current year"
             )
         if not FieldValidations.validate_date(self, service_date):
-            errors.append("Service Date must be in dd-mm-yy format.")
-        if not FieldValidations.validate_date(self, tax_due_date):
-            errors.append("Tax Due Date must be in dd-mm-yy format.")
+            errors.append("Service Date must be in dd-mm-yyyy format.")
+        if tax_status in ["SORN", "Exempt"]:
+            if tax_due_date != "N/A":
+                errors.append(
+                    "Tax Due Date must be 'N/A' when Tax Status is SORN or "
+                    "Exempt."
+                    )
+        else:
+            if not FieldValidations.validate_date(self, tax_due_date):
+                errors.append("Tax Due Date must be in dd-mm-yyyy format.")
+
         if not tax_status:
             errors.append("Tax Status must be selected.")
 
@@ -126,14 +134,43 @@ class FieldValidations:
             List[str]: A list of error messages if validation fails.
         """
         errors: List[str] = []
+        print(updates)
         if "Service Date" in updates and not FieldValidations.validate_date(
             self,
             updates["Service Date"]
                 ):
-            errors.append("Date fields must be in dd-mm-yyyy format!")
-        if "Tax Due Date" in updates and not FieldValidations.validate_date(
-            self,
-            updates["Tax Due Date"]
-                ):
-            errors.append("Date fields must be in dd-mm-yyyy format!")
-        return errors
+            errors.append("Service date field must be in dd-mm-yyyy format!")
+        if "Tax Due Date" in updates:
+            if updates.get("Tax Status") in ["SORN", "Exempt"]:
+                if updates["Tax Due Date"] != "N/A":
+                    errors.append(
+                        "Tax Due Date must be 'N/A' when Tax Status is "
+                        "SORN or Exempt."
+                        )
+            elif not FieldValidations.validate_date(
+                self,
+                updates["Tax Due Date"]
+            ):
+                errors.append(
+                    "Tax due date field must be in dd-mm-yyyy format!"
+                    )
+        if "Tax Status" in updates:
+            if not updates["Tax Status"] in [
+                "Tax Paid", "Tax Due", "SORN", "Exempt"
+            ]:
+                errors.append(
+                    "Tax Status must be one of the following: Tax Paid,"
+                    " Tax Due, SORN, Exempt."
+                    )
+            if updates["Tax Status"] in ["SORN", "Exempt"] and (
+                "Tax Due Date" not in updates or
+                updates["Tax Due Date"] != "N/A"
+            ):
+                errors.append(
+                    "Tax Due Date must be 'N/A' when Tax Status is SORN or "
+                    "Exempt, please update/ re-submit this field."
+                    )
+            if not updates["Tax Status"]:
+                errors.append("Tax Due Date must be entered.")
+        if errors:
+            return errors
