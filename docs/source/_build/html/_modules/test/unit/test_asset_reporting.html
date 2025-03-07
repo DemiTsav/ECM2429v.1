@@ -1,0 +1,213 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>test.unit.test_asset_reporting &mdash; Fleet Management System 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Fleet Management System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/backend/index.html">Asset Management Backend Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/frontend/index.html">Asset Management Frontend Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_diagrams/index.html">Visual Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../test/index.html">Test Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Fleet Management System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">test.unit.test_asset_reporting</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for test.unit.test_asset_reporting</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asset_management.database</span><span class="w"> </span><span class="kn">import</span> <span class="n">VehicleDatabase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asset_management.frontend.asset_reporting</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssetReportingHandler</span>
+
+
+<div class="viewcode-block" id="temp_db">
+<a class="viewcode-back" href="../../../test/test_asset_reporting.html#test.unit.test_asset_reporting.temp_db">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">temp_db</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates an in-memory SQLite database with a &#39;vehicles&#39; table and sample</span>
+<span class="sd">    data.&quot;&quot;&quot;</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;:memory:&quot;</span><span class="p">)</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    CREATE TABLE vehicles (</span>
+<span class="s2">        id INTEGER PRIMARY KEY,</span>
+<span class="s2">        make TEXT,</span>
+<span class="s2">        model TEXT,</span>
+<span class="s2">        year INTEGER,</span>
+<span class="s2">        fuel_type TEXT,</span>
+<span class="s2">        service_date TEXT,</span>
+<span class="s2">        tax_due_date TEXT</span>
+<span class="s2">    )</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">cursor</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    INSERT INTO vehicles (make, model, year, fuel_type, service_date,</span>
+<span class="s2">                       tax_due_date)</span>
+<span class="s2">    VALUES (?, ?, ?, ?, ?, ?)</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;Toyota&#39;</span><span class="p">,</span> <span class="s1">&#39;Corolla&#39;</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="s1">&#39;Petrol&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-03-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-06-01&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;Ford&#39;</span><span class="p">,</span> <span class="s1">&#39;Focus&#39;</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="s1">&#39;Diesel&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-04-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-05-01&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;Honda&#39;</span><span class="p">,</span> <span class="s1">&#39;Civic&#39;</span><span class="p">,</span> <span class="mi">2005</span><span class="p">,</span> <span class="s1">&#39;Diesel&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-02-15&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-05-01&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;BMW&#39;</span><span class="p">,</span> <span class="s1">&#39;X5&#39;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="s1">&#39;Petrol&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-06-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-07-01&#39;</span><span class="p">)</span>
+    <span class="p">])</span>
+
+    <span class="n">db</span> <span class="o">=</span> <span class="n">VehicleDatabase</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="n">db</span>
+
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="test_get_report_query">
+<a class="viewcode-back" href="../../../test/test_asset_reporting.html#test.unit.test_asset_reporting.test_get_report_query">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_get_report_query</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests if get_report_query() returns the correct SQL queries based on</span>
+<span class="sd">    the report type.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">AssetReportingHandler</span><span class="o">.</span><span class="n">get_report_query</span><span class="p">(</span><span class="s2">&quot;All Vehicles&quot;</span><span class="p">)</span> <span class="o">==</span>
+            <span class="s2">&quot;SELECT * FROM vehicles&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">AssetReportingHandler</span><span class="o">.</span><span class="n">get_report_query</span><span class="p">(</span>
+            <span class="s2">&quot;Vehicles Due for Service&quot;</span><span class="p">)</span> <span class="o">==</span>
+            <span class="p">(</span><span class="s2">&quot;SELECT * FROM vehicles WHERE service_date &lt;= &quot;</span>
+             <span class="s2">&quot;date(&#39;now&#39;, &#39;+1 month&#39;)&quot;</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">AssetReportingHandler</span><span class="o">.</span><span class="n">get_report_query</span><span class="p">(</span>
+            <span class="s2">&quot;Vehicles with Tax Due&quot;</span><span class="p">)</span> <span class="o">==</span>
+            <span class="p">(</span><span class="s2">&quot;SELECT * FROM vehicles WHERE tax_due_date &lt;= &quot;</span>
+             <span class="s2">&quot;date(&#39;now&#39;, &#39;+1 month&#39;)&quot;</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">AssetReportingHandler</span><span class="o">.</span><span class="n">get_report_query</span><span class="p">(</span>
+            <span class="s2">&quot;Vehicles Older Than 10 Years&quot;</span><span class="p">)</span> <span class="o">==</span>
+            <span class="s2">&quot;SELECT * FROM vehicles WHERE year &lt;= strftime(&#39;%Y&#39;, &#39;now&#39;) - 10&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">AssetReportingHandler</span><span class="o">.</span><span class="n">get_report_query</span><span class="p">(</span><span class="s2">&quot;Diesel Vehicles&quot;</span><span class="p">)</span> <span class="o">==</span>
+            <span class="s2">&quot;SELECT * FROM vehicles WHERE LOWER(fuel_type) = LOWER(&#39;Diesel&#39;)&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">AssetReportingHandler</span><span class="o">.</span><span class="n">get_report_query</span><span class="p">(</span>
+        <span class="s2">&quot;Nonexistent Report&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_fetch_report">
+<a class="viewcode-back" href="../../../test/test_asset_reporting.html#test.unit.test_asset_reporting.test_fetch_report">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_fetch_report</span><span class="p">(</span><span class="n">temp_db</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests if fetch_report() retrieves the correct data for a given report#</span>
+<span class="sd">    type.&quot;&quot;&quot;</span>
+    <span class="n">mock_fetch_report</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span>
+        <span class="n">AssetReportingHandler</span><span class="p">,</span>
+        <span class="s1">&#39;fetch_report&#39;</span><span class="p">,</span>
+        <span class="n">return_value</span><span class="o">=</span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Toyota&#39;</span><span class="p">,</span> <span class="s1">&#39;Corolla&#39;</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="s1">&#39;Petrol&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-03-01&#39;</span><span class="p">)]</span>
+    <span class="p">)</span>
+
+    <span class="n">report</span> <span class="o">=</span> <span class="n">AssetReportingHandler</span><span class="o">.</span><span class="n">fetch_report</span><span class="p">(</span><span class="n">temp_db</span><span class="p">,</span> <span class="s2">&quot;All Vehicles&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">report</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">report</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Toyota&#39;</span>
+
+    <span class="n">mock_fetch_report</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">temp_db</span><span class="p">,</span> <span class="s2">&quot;All Vehicles&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_fetch_custom_report">
+<a class="viewcode-back" href="../../../test/test_asset_reporting.html#test.unit.test_asset_reporting.test_fetch_custom_report">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_fetch_custom_report</span><span class="p">(</span><span class="n">temp_db</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests if fetch_custom_report() correctly filters vehicles based on</span>
+<span class="sd">    given criteria.&quot;&quot;&quot;</span>
+    <span class="n">filters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Fuel Type&quot;</span><span class="p">:</span> <span class="s2">&quot;Diesel&quot;</span><span class="p">}</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">AssetReportingHandler</span><span class="o">.</span><span class="n">fetch_custom_report</span><span class="p">(</span><span class="n">temp_db</span><span class="p">,</span> <span class="n">filters</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">report</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">assert</span> <span class="n">report</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Ford&#39;</span>
+    <span class="k">assert</span> <span class="n">report</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Honda&#39;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, 730095122.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

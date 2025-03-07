@@ -19,5 +19,6 @@ extensions = [
     'sphinx.ext.graphviz',
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
-    'sphinx.ext.viewcode'
+    'sphinx.ext.viewcode',
+    'sphinxcontrib.mermaid'
     ]

@@ -16,6 +16,14 @@
       <script src="_static/documentation_options.js?v=29a6c3e3"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -42,15 +50,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tasks.html">startup tasks module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="database.html">database module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="asset_management_handler.html">asset_management module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="field_validations.html">asset_management input field validations module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="report_generation.html">reporting module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="asset_reporting.html">format reports module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ui_manager.html">gui module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ui_components.html">components module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="system_architecture.html">Data class diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asset_management/backend/index.html">Asset Management Backend Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asset_management/frontend/index.html">Asset Management Frontend Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design_diagrams/index.html">Visual Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test/index.html">Test Documentation</a></li>
 </ul>
 
         </div>
@@ -86,9 +89,11 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#I"><strong>I</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
+ | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
@@ -99,71 +104,77 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.add_vehicle">add_vehicle() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+      <li><a href="asset_management/backend/asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.add_vehicle">add_vehicle() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+
+      <ul>
+        <li><a href="asset_management/backend/database.html#asset_management.database.VehicleDatabase.add_vehicle">(asset_management.database.VehicleDatabase method)</a>
+</li>
+      </ul></li>
+      <li><a href="test/test_ui_manager.html#test.unit.test_ui_manager.app">app() (in module test.unit.test_ui_manager)</a>
 </li>
       <li>
     asset_management.backend.asset_management_handler
 
       <ul>
-        <li><a href="asset_management_handler.html#module-asset_management.backend.asset_management_handler">module</a>
+        <li><a href="asset_management/backend/asset_management_handler.html#module-asset_management.backend.asset_management_handler">module</a>
 </li>
       </ul></li>
       <li>
     asset_management.backend.field_validations
 
       <ul>
-        <li><a href="field_validations.html#module-asset_management.backend.field_validations">module</a>
+        <li><a href="asset_management/backend/field_validations.html#module-asset_management.backend.field_validations">module</a>
 </li>
       </ul></li>
       <li>
     asset_management.backend.report_generation
 
       <ul>
-        <li><a href="report_generation.html#module-asset_management.backend.report_generation">module</a>
+        <li><a href="asset_management/backend/report_generation.html#module-asset_management.backend.report_generation">module</a>
 </li>
       </ul></li>
       <li>
     asset_management.database
 
       <ul>
-        <li><a href="database.html#module-asset_management.database">module</a>
-</li>
-      </ul></li>
-      <li>
-    asset_management.frontend.asset_reporting
-
-      <ul>
-        <li><a href="asset_reporting.html#module-asset_management.frontend.asset_reporting">module</a>
+        <li><a href="asset_management/backend/database.html#module-asset_management.database">module</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
+    asset_management.frontend.asset_reporting
+
+      <ul>
+        <li><a href="asset_management/frontend/asset_reporting.html#module-asset_management.frontend.asset_reporting">module</a>
+</li>
+      </ul></li>
+      <li>
     asset_management.frontend.ui_components
 
       <ul>
-        <li><a href="ui_components.html#module-asset_management.frontend.ui_components">module</a>
+        <li><a href="asset_management/frontend/ui_components.html#module-asset_management.frontend.ui_components">module</a>
 </li>
       </ul></li>
       <li>
     asset_management.frontend.ui_manager
 
       <ul>
-        <li><a href="ui_manager.html#module-asset_management.frontend.ui_manager">module</a>
+        <li><a href="asset_management/frontend/ui_manager.html#module-asset_management.frontend.ui_manager">module</a>
 </li>
       </ul></li>
       <li>
     asset_management.tasks
 
       <ul>
-        <li><a href="tasks.html#module-asset_management.tasks">module</a>
+        <li><a href="asset_management/backend/tasks.html#module-asset_management.tasks">module</a>
 </li>
       </ul></li>
-      <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI">AssetManagementUI (class in asset_management.frontend.ui_manager)</a>
+      <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI">AssetManagementUI (class in asset_management.frontend.ui_manager)</a>
 </li>
-      <li><a href="report_generation.html#asset_management.backend.report_generation.AssetReportingHandler">AssetReportingHandler (class in asset_management.backend.report_generation)</a>
+      <li><a href="asset_management/backend/report_generation.html#asset_management.backend.report_generation.AssetReportingHandler">AssetReportingHandler (class in asset_management.backend.report_generation)</a>
 </li>
-      <li><a href="asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage">AssetReportingPage (class in asset_management.frontend.asset_reporting)</a>
+      <li><a href="asset_management/frontend/asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage">AssetReportingPage (class in asset_management.frontend.asset_reporting)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -171,41 +182,43 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.checkbox_updates">checkbox_updates() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.checkbox_updates">checkbox_updates() (asset_management.frontend.ui_components.UIComponents method)</a>
 </li>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.clear_dynamic_content">clear_dynamic_content() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.clear_dynamic_content">clear_dynamic_content() (asset_management.frontend.ui_components.UIComponents method)</a>
 
       <ul>
-        <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.clear_dynamic_content">(asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+        <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.clear_dynamic_content">(asset_management.frontend.ui_manager.AssetManagementUI method)</a>
 </li>
       </ul></li>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.clear_form_fields">clear_form_fields() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.clear_form_fields">clear_form_fields() (asset_management.frontend.ui_components.UIComponents method)</a>
 </li>
-      <li><a href="asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.confirm_deletion">confirm_deletion() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+      <li><a href="asset_management/backend/database.html#asset_management.database.VehicleDatabase.close">close() (asset_management.database.VehicleDatabase method)</a>
 </li>
-      <li><a href="asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.confirm_export_to_csv">confirm_export_to_csv() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
+      <li><a href="asset_management/backend/asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.confirm_deletion">confirm_deletion() (asset_management.backend.asset_management_handler.VehicleController method)</a>
 </li>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.create_button">create_button() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="asset_management/frontend/asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.confirm_export_to_csv">confirm_export_to_csv() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
+</li>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.create_button">create_button() (asset_management.frontend.ui_components.UIComponents method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.create_checkbox">create_checkbox() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.create_checkbox">create_checkbox() (asset_management.frontend.ui_components.UIComponents method)</a>
 </li>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.create_dropdown">create_dropdown() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.create_dropdown">create_dropdown() (asset_management.frontend.ui_components.UIComponents method)</a>
 </li>
-      <li><a href="asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.create_filter">create_filter() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
+      <li><a href="asset_management/frontend/asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.create_filter">create_filter() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
 </li>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.create_text_entry">create_text_entry() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.create_text_entry">create_text_entry() (asset_management.frontend.ui_components.UIComponents method)</a>
 </li>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.create_update_fields">create_update_fields() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.create_update_fields">create_update_fields() (asset_management.frontend.ui_components.UIComponents method)</a>
 </li>
-      <li><a href="asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.create_widgets">create_widgets() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
+      <li><a href="asset_management/frontend/asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.create_widgets">create_widgets() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
 
       <ul>
-        <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.create_widgets">(asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+        <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.create_widgets">(asset_management.frontend.ui_manager.AssetManagementUI method)</a>
 </li>
       </ul></li>
-      <li><a href="asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.custom_report">custom_report() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
+      <li><a href="asset_management/frontend/asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.custom_report">custom_report() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -213,17 +226,25 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.delete_vehicle">delete_vehicle() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+      <li><a href="test/test_database.html#test.unit.test_database_functions.db">db() (in module test.unit.test_database_functions)</a>
 </li>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.display_message">display_message() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="asset_management/backend/asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.delete_vehicle">delete_vehicle() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+
+      <ul>
+        <li><a href="asset_management/backend/database.html#asset_management.database.VehicleDatabase.delete_vehicle">(asset_management.database.VehicleDatabase method)</a>
+</li>
+      </ul></li>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.display_message">display_message() (asset_management.frontend.ui_components.UIComponents method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.display_report">display_report() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
+      <li><a href="asset_management/frontend/asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.display_report">display_report() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
 </li>
-      <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.display_vehicle_data">display_vehicle_data() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+      <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.display_vehicle_data">display_vehicle_data() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
 </li>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.display_vehicle_info">display_vehicle_info() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.display_vehicle_info">display_vehicle_info() (asset_management.frontend.ui_components.UIComponents method)</a>
+</li>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.dynamic_content_frame">dynamic_content_frame() (in module test.unit.test_ui_components)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -231,11 +252,11 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.enable_delete_button">enable_delete_button() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.enable_delete_button">enable_delete_button() (asset_management.frontend.ui_components.UIComponents method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.export_to_csv">export_to_csv() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
+      <li><a href="asset_management/frontend/asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.export_to_csv">export_to_csv() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -243,13 +264,15 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="report_generation.html#asset_management.backend.report_generation.AssetReportingHandler.fetch_custom_report">fetch_custom_report() (asset_management.backend.report_generation.AssetReportingHandler static method)</a>
+      <li><a href="asset_management/backend/report_generation.html#asset_management.backend.report_generation.AssetReportingHandler.fetch_custom_report">fetch_custom_report() (asset_management.backend.report_generation.AssetReportingHandler static method)</a>
+</li>
+      <li><a href="asset_management/backend/report_generation.html#asset_management.backend.report_generation.AssetReportingHandler.fetch_report">fetch_report() (asset_management.backend.report_generation.AssetReportingHandler static method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="report_generation.html#asset_management.backend.report_generation.AssetReportingHandler.fetch_report">fetch_report() (asset_management.backend.report_generation.AssetReportingHandler static method)</a>
+      <li><a href="test/test_field_validations.html#test.unit.test_field_validations.field_validations">field_validations() (in module test.unit.test_field_validations)</a>
 </li>
-      <li><a href="field_validations.html#asset_management.backend.field_validations.FieldValidations">FieldValidations (class in asset_management.backend.field_validations)</a>
+      <li><a href="asset_management/backend/field_validations.html#asset_management.backend.field_validations.FieldValidations">FieldValidations (class in asset_management.backend.field_validations)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -257,15 +280,29 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.generate_custom_report">generate_custom_report() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
+      <li><a href="asset_management/frontend/asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.generate_custom_report">generate_custom_report() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
 </li>
-      <li><a href="asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.generate_report">generate_report() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
+      <li><a href="asset_management/frontend/asset_reporting.html#asset_management.frontend.asset_reporting.AssetReportingPage.generate_report">generate_report() (asset_management.frontend.asset_reporting.AssetReportingPage method)</a>
 </li>
+      <li><a href="asset_management/backend/asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.get_all_vehicles">get_all_vehicles() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+
+      <ul>
+        <li><a href="asset_management/backend/database.html#asset_management.database.VehicleDatabase.get_all_vehicles">(asset_management.database.VehicleDatabase method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.get_all_vehicles">get_all_vehicles() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+      <li><a href="asset_management/backend/report_generation.html#asset_management.backend.report_generation.AssetReportingHandler.get_report_query">get_report_query() (asset_management.backend.report_generation.AssetReportingHandler static method)</a>
 </li>
-      <li><a href="report_generation.html#asset_management.backend.report_generation.AssetReportingHandler.get_report_query">get_report_query() (asset_management.backend.report_generation.AssetReportingHandler static method)</a>
+      <li><a href="asset_management/backend/database.html#asset_management.database.VehicleDatabase.get_vehicle">get_vehicle() (asset_management.database.VehicleDatabase method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="asset_management/backend/database.html#asset_management.database.VehicleDatabase.initialize_database">initialize_database() (asset_management.database.VehicleDatabase method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -273,25 +310,49 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.mock_callbacks">mock_callbacks() (in module test.unit.test_asset_management_handler)</a>
+</li>
+      <li><a href="test/test_ui_manager.html#test.unit.test_ui_manager.mock_controller">mock_controller() (in module test.unit.test_ui_manager)</a>
+</li>
+      <li><a href="test/test_field_validations.html#test.unit.test_field_validations.mock_entries">mock_entries() (in module test.unit.test_field_validations)</a>
+</li>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.mock_ui_components">mock_ui_components() (in module test.unit.test_asset_management_handler)</a>
+</li>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.mock_validations">mock_validations() (in module test.unit.test_asset_management_handler)</a>
+</li>
       <li>
     module
 
       <ul>
-        <li><a href="asset_management_handler.html#module-asset_management.backend.asset_management_handler">asset_management.backend.asset_management_handler</a>
+        <li><a href="asset_management/backend/asset_management_handler.html#module-asset_management.backend.asset_management_handler">asset_management.backend.asset_management_handler</a>
 </li>
-        <li><a href="field_validations.html#module-asset_management.backend.field_validations">asset_management.backend.field_validations</a>
+        <li><a href="asset_management/backend/field_validations.html#module-asset_management.backend.field_validations">asset_management.backend.field_validations</a>
 </li>
-        <li><a href="report_generation.html#module-asset_management.backend.report_generation">asset_management.backend.report_generation</a>
+        <li><a href="asset_management/backend/report_generation.html#module-asset_management.backend.report_generation">asset_management.backend.report_generation</a>
 </li>
-        <li><a href="database.html#module-asset_management.database">asset_management.database</a>
+        <li><a href="asset_management/backend/database.html#module-asset_management.database">asset_management.database</a>
 </li>
-        <li><a href="asset_reporting.html#module-asset_management.frontend.asset_reporting">asset_management.frontend.asset_reporting</a>
+        <li><a href="asset_management/frontend/asset_reporting.html#module-asset_management.frontend.asset_reporting">asset_management.frontend.asset_reporting</a>
 </li>
-        <li><a href="ui_components.html#module-asset_management.frontend.ui_components">asset_management.frontend.ui_components</a>
+        <li><a href="asset_management/frontend/ui_components.html#module-asset_management.frontend.ui_components">asset_management.frontend.ui_components</a>
 </li>
-        <li><a href="ui_manager.html#module-asset_management.frontend.ui_manager">asset_management.frontend.ui_manager</a>
+        <li><a href="asset_management/frontend/ui_manager.html#module-asset_management.frontend.ui_manager">asset_management.frontend.ui_manager</a>
 </li>
-        <li><a href="tasks.html#module-asset_management.tasks">asset_management.tasks</a>
+        <li><a href="asset_management/backend/tasks.html#module-asset_management.tasks">asset_management.tasks</a>
+</li>
+        <li><a href="test/test_asset_management_handler.html#module-test.unit.test_asset_management_handler">test.unit.test_asset_management_handler</a>
+</li>
+        <li><a href="test/test_asset_reporting.html#module-test.unit.test_asset_reporting">test.unit.test_asset_reporting</a>
+</li>
+        <li><a href="test/test_database.html#module-test.unit.test_database_functions">test.unit.test_database_functions</a>
+</li>
+        <li><a href="test/test_field_validations.html#module-test.unit.test_field_validations">test.unit.test_field_validations</a>
+</li>
+        <li><a href="test/test_report_generation.html#module-test.unit.test_report_generation">test.unit.test_report_generation</a>
+</li>
+        <li><a href="test/test_ui_components.html#module-test.unit.test_ui_components">test.unit.test_ui_components</a>
+</li>
+        <li><a href="test/test_ui_manager.html#module-test.unit.test_ui_manager">test.unit.test_ui_manager</a>
 </li>
       </ul></li>
   </ul></td>
@@ -300,11 +361,11 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.open_asset_reporting_page">open_asset_reporting_page() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+      <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.open_asset_reporting_page">open_asset_reporting_page() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.open_new_window">open_new_window() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+      <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.open_new_window">open_new_window() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -312,7 +373,15 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.perform_search">perform_search() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+      <li><a href="asset_management/backend/asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.perform_search">perform_search() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Q">Q</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="asset_management/backend/database.html#asset_management.database.VehicleDatabase.query_vehicles">query_vehicles() (asset_management.database.VehicleDatabase method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -320,13 +389,15 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.refresh_vehicle_table">refresh_vehicle_table() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+      <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.refresh_vehicle_table">refresh_vehicle_table() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+</li>
+      <li><a href="asset_management/backend/asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.retrieve_vehicle_info">retrieve_vehicle_info() (asset_management.backend.asset_management_handler.VehicleController method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.retrieve_vehicle_info">retrieve_vehicle_info() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.root">root() (in module test.unit.test_ui_components)</a>
 </li>
-      <li><a href="tasks.html#asset_management.tasks.run_sample_tasks">run_sample_tasks() (in module asset_management.tasks)</a>
+      <li><a href="asset_management/backend/tasks.html#asset_management.tasks.run_sample_tasks">run_sample_tasks() (in module asset_management.tasks)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -334,15 +405,15 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_add_vehicle_form">show_add_vehicle_form() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+      <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_add_vehicle_form">show_add_vehicle_form() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
 </li>
-      <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_delete_vehicle_prompt">show_delete_vehicle_prompt() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+      <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_delete_vehicle_prompt">show_delete_vehicle_prompt() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_search_form">show_search_form() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+      <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_search_form">show_search_form() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
 </li>
-      <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_update_vehicle_form">show_update_vehicle_form() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+      <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_update_vehicle_form">show_update_vehicle_form() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -350,7 +421,150 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.toggle_entry_state">toggle_entry_state() (asset_management.frontend.ui_components.UIComponents method)</a>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.temp_db">temp_db() (in module test.unit.test_asset_management_handler)</a>
+
+      <ul>
+        <li><a href="test/test_asset_reporting.html#test.unit.test_asset_reporting.temp_db">(in module test.unit.test_asset_reporting)</a>
+</li>
+        <li><a href="test/test_report_generation.html#test.unit.test_report_generation.temp_db">(in module test.unit.test_report_generation)</a>
+</li>
+        <li><a href="test/test_ui_manager.html#test.unit.test_ui_manager.temp_db">(in module test.unit.test_ui_manager)</a>
+</li>
+      </ul></li>
+      <li>
+    test.unit.test_asset_management_handler
+
+      <ul>
+        <li><a href="test/test_asset_management_handler.html#module-test.unit.test_asset_management_handler">module</a>
+</li>
+      </ul></li>
+      <li>
+    test.unit.test_asset_reporting
+
+      <ul>
+        <li><a href="test/test_asset_reporting.html#module-test.unit.test_asset_reporting">module</a>
+</li>
+      </ul></li>
+      <li>
+    test.unit.test_database_functions
+
+      <ul>
+        <li><a href="test/test_database.html#module-test.unit.test_database_functions">module</a>
+</li>
+      </ul></li>
+      <li>
+    test.unit.test_field_validations
+
+      <ul>
+        <li><a href="test/test_field_validations.html#module-test.unit.test_field_validations">module</a>
+</li>
+      </ul></li>
+      <li>
+    test.unit.test_report_generation
+
+      <ul>
+        <li><a href="test/test_report_generation.html#module-test.unit.test_report_generation">module</a>
+</li>
+      </ul></li>
+      <li>
+    test.unit.test_ui_components
+
+      <ul>
+        <li><a href="test/test_ui_components.html#module-test.unit.test_ui_components">module</a>
+</li>
+      </ul></li>
+      <li>
+    test.unit.test_ui_manager
+
+      <ul>
+        <li><a href="test/test_ui_manager.html#module-test.unit.test_ui_manager">module</a>
+</li>
+      </ul></li>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.test_add_vehicle">test_add_vehicle() (in module test.unit.test_asset_management_handler)</a>
+
+      <ul>
+        <li><a href="test/test_database.html#test.unit.test_database_functions.test_add_vehicle">(in module test.unit.test_database_functions)</a>
+</li>
+      </ul></li>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.test_add_vehicle_with_validation_errors">test_add_vehicle_with_validation_errors() (in module test.unit.test_asset_management_handler)</a>
+</li>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.test_checkbox_updates">test_checkbox_updates() (in module test.unit.test_ui_components)</a>
+</li>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.test_clear_dynamic_content">test_clear_dynamic_content() (in module test.unit.test_ui_components)</a>
+</li>
+      <li><a href="test/test_database.html#test.unit.test_database_functions.test_close_connection">test_close_connection() (in module test.unit.test_database_functions)</a>
+</li>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.test_confirm_deletion">test_confirm_deletion() (in module test.unit.test_asset_management_handler)</a>
+</li>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.test_confirm_deletion_no_selection">test_confirm_deletion_no_selection() (in module test.unit.test_asset_management_handler)</a>
+</li>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.test_create_button">test_create_button() (in module test.unit.test_ui_components)</a>
+</li>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.test_create_checkbox">test_create_checkbox() (in module test.unit.test_ui_components)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.test_create_dropdown">test_create_dropdown() (in module test.unit.test_ui_components)</a>
+</li>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.test_create_text_entry">test_create_text_entry() (in module test.unit.test_ui_components)</a>
+</li>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.test_delete_vehicle">test_delete_vehicle() (in module test.unit.test_asset_management_handler)</a>
+
+      <ul>
+        <li><a href="test/test_database.html#test.unit.test_database_functions.test_delete_vehicle">(in module test.unit.test_database_functions)</a>
+</li>
+      </ul></li>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.test_display_message">test_display_message() (in module test.unit.test_ui_components)</a>
+</li>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.test_enable_delete_button">test_enable_delete_button() (in module test.unit.test_ui_components)</a>
+</li>
+      <li><a href="test/test_report_generation.html#test.unit.test_report_generation.test_export_to_csv">test_export_to_csv() (in module test.unit.test_report_generation)</a>
+</li>
+      <li><a href="test/test_asset_reporting.html#test.unit.test_asset_reporting.test_fetch_custom_report">test_fetch_custom_report() (in module test.unit.test_asset_reporting)</a>
+</li>
+      <li><a href="test/test_asset_reporting.html#test.unit.test_asset_reporting.test_fetch_report">test_fetch_report() (in module test.unit.test_asset_reporting)</a>
+</li>
+      <li><a href="test/test_report_generation.html#test.unit.test_report_generation.test_generate_custom_report">test_generate_custom_report() (in module test.unit.test_report_generation)</a>
+</li>
+      <li><a href="test/test_report_generation.html#test.unit.test_report_generation.test_generate_report">test_generate_report() (in module test.unit.test_report_generation)</a>
+</li>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.test_get_all_vehicles">test_get_all_vehicles() (in module test.unit.test_asset_management_handler)</a>
+
+      <ul>
+        <li><a href="test/test_database.html#test.unit.test_database_functions.test_get_all_vehicles">(in module test.unit.test_database_functions)</a>
+</li>
+      </ul></li>
+      <li><a href="test/test_asset_reporting.html#test.unit.test_asset_reporting.test_get_report_query">test_get_report_query() (in module test.unit.test_asset_reporting)</a>
+</li>
+      <li><a href="test/test_database.html#test.unit.test_database_functions.test_initialize_database">test_initialize_database() (in module test.unit.test_database_functions)</a>
+</li>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.test_perform_search">test_perform_search() (in module test.unit.test_asset_management_handler)</a>
+</li>
+      <li><a href="test/test_database.html#test.unit.test_database_functions.test_query_vehicles">test_query_vehicles() (in module test.unit.test_database_functions)</a>
+</li>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.test_toggle_entry_state">test_toggle_entry_state() (in module test.unit.test_ui_components)</a>
+</li>
+      <li><a href="test/test_field_validations.html#test.unit.test_field_validations.test_update_validations">test_update_validations() (in module test.unit.test_field_validations)</a>
+</li>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.test_update_vehicle">test_update_vehicle() (in module test.unit.test_asset_management_handler)</a>
+
+      <ul>
+        <li><a href="test/test_database.html#test.unit.test_database_functions.test_update_vehicle">(in module test.unit.test_database_functions)</a>
+</li>
+      </ul></li>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.test_update_vehicle_table">test_update_vehicle_table() (in module test.unit.test_ui_components)</a>
+</li>
+      <li><a href="test/test_field_validations.html#test.unit.test_field_validations.test_validate_character_input">test_validate_character_input() (in module test.unit.test_field_validations)</a>
+</li>
+      <li><a href="test/test_field_validations.html#test.unit.test_field_validations.test_validate_date">test_validate_date() (in module test.unit.test_field_validations)</a>
+</li>
+      <li><a href="test/test_field_validations.html#test.unit.test_field_validations.test_validate_year">test_validate_year() (in module test.unit.test_field_validations)</a>
+</li>
+      <li><a href="test/test_field_validations.html#test.unit.test_field_validations.test_validations_failure">test_validations_failure() (in module test.unit.test_field_validations)</a>
+</li>
+      <li><a href="test/test_field_validations.html#test.unit.test_field_validations.test_validations_success">test_validations_success() (in module test.unit.test_field_validations)</a>
+</li>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.toggle_entry_state">toggle_entry_state() (asset_management.frontend.ui_components.UIComponents method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -358,17 +572,23 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents">UIComponents (class in asset_management.frontend.ui_components)</a>
+      <li><a href="test/test_ui_components.html#test.unit.test_ui_components.ui_components">ui_components() (in module test.unit.test_ui_components)</a>
 </li>
-      <li><a href="field_validations.html#asset_management.backend.field_validations.FieldValidations.update_validations">update_validations() (asset_management.backend.field_validations.FieldValidations method)</a>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents">UIComponents (class in asset_management.frontend.ui_components)</a>
+</li>
+      <li><a href="asset_management/backend/field_validations.html#asset_management.backend.field_validations.FieldValidations.update_validations">update_validations() (asset_management.backend.field_validations.FieldValidations method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.update_vehicle">update_vehicle() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+      <li><a href="asset_management/backend/asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController.update_vehicle">update_vehicle() (asset_management.backend.asset_management_handler.VehicleController method)</a>
+
+      <ul>
+        <li><a href="asset_management/backend/database.html#asset_management.database.VehicleDatabase.update_vehicle">(asset_management.database.VehicleDatabase method)</a>
 </li>
-      <li><a href="ui_components.html#asset_management.frontend.ui_components.UIComponents.update_vehicle_table">update_vehicle_table() (asset_management.frontend.ui_components.UIComponents method)</a>
+      </ul></li>
+      <li><a href="asset_management/frontend/ui_components.html#asset_management.frontend.ui_components.UIComponents.update_vehicle_table">update_vehicle_table() (asset_management.frontend.ui_components.UIComponents method)</a>
 </li>
-      <li><a href="ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.update_vehicle_values">update_vehicle_values() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
+      <li><a href="asset_management/frontend/ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.update_vehicle_values">update_vehicle_values() (asset_management.frontend.ui_manager.AssetManagementUI method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -376,17 +596,27 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="field_validations.html#asset_management.backend.field_validations.FieldValidations.validate_character_input">validate_character_input() (asset_management.backend.field_validations.FieldValidations method)</a>
+      <li><a href="asset_management/backend/field_validations.html#asset_management.backend.field_validations.FieldValidations.validate_character_input">validate_character_input() (asset_management.backend.field_validations.FieldValidations method)</a>
 </li>
-      <li><a href="field_validations.html#asset_management.backend.field_validations.FieldValidations.validate_date">validate_date() (asset_management.backend.field_validations.FieldValidations method)</a>
+      <li><a href="asset_management/backend/field_validations.html#asset_management.backend.field_validations.FieldValidations.validate_date">validate_date() (asset_management.backend.field_validations.FieldValidations method)</a>
+</li>
+      <li><a href="asset_management/backend/field_validations.html#asset_management.backend.field_validations.FieldValidations.validate_year">validate_year() (asset_management.backend.field_validations.FieldValidations method)</a>
+</li>
+      <li><a href="asset_management/backend/field_validations.html#asset_management.backend.field_validations.FieldValidations.validations">validations() (asset_management.backend.field_validations.FieldValidations method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="field_validations.html#asset_management.backend.field_validations.FieldValidations.validate_year">validate_year() (asset_management.backend.field_validations.FieldValidations method)</a>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.vehicle_controller">vehicle_controller() (in module test.unit.test_asset_management_handler)</a>
 </li>
-      <li><a href="field_validations.html#asset_management.backend.field_validations.FieldValidations.validations">validations() (asset_management.backend.field_validations.FieldValidations method)</a>
+      <li><a href="test/test_asset_management_handler.html#test.unit.test_asset_management_handler.vehicle_table">vehicle_table() (in module test.unit.test_asset_management_handler)</a>
+
+      <ul>
+        <li><a href="test/test_ui_components.html#test.unit.test_ui_components.vehicle_table">(in module test.unit.test_ui_components)</a>
 </li>
-      <li><a href="asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController">VehicleController (class in asset_management.backend.asset_management_handler)</a>
+      </ul></li>
+      <li><a href="asset_management/backend/asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController">VehicleController (class in asset_management.backend.asset_management_handler)</a>
+</li>
+      <li><a href="asset_management/backend/database.html#asset_management.database.VehicleDatabase">VehicleDatabase (class in asset_management.database)</a>
 </li>
   </ul></td>
 </tr></table>

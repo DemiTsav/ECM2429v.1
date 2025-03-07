@@ -1,0 +1,5 @@
+UI Manager Tests
+======================================
+
+.. automodule:: test.unit.test_ui_manager
+    :members:

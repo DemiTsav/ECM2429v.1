@@ -1,0 +1,229 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>test.unit.test_field_validations &mdash; Fleet Management System 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Fleet Management System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/backend/tasks.html">startup tasks module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/backend/database.html">database module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/backend/asset_management_handler.html">asset_management module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/backend/field_validations.html">asset_management input field validations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/backend/report_generation.html">reporting module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/frontend/asset_reporting.html">format reports module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/frontend/ui_manager.html">gui module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/frontend/ui_components.html">components module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_diagrams/system_architecture.html">Data class diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../test/test_asset_management_handler.html">Test: Asset Management Handler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../test/test_database.html">Database Tests module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../test/test_field_validations.html">Field Validations Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../test/test_report_generation.html">Asset Report Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../test/test_asset_reporting.html">Test: Asset Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../test/test_ui_manager.html">UI Manager Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../test/test_ui_components.html">UI Components Tests</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Fleet Management System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">test.unit.test_field_validations</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for test.unit.test_field_validations</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asset_management.backend.field_validations</span><span class="w"> </span><span class="kn">import</span> <span class="n">FieldValidations</span>
+
+
+<div class="viewcode-block" id="field_validations">
+<a class="viewcode-back" href="../../../test/test_field_validations.html#test.unit.test_field_validations.field_validations">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">field_validations</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fixture to create an instance of FieldValidations.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">FieldValidations</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="mock_entries">
+<a class="viewcode-back" href="../../../test/test_field_validations.html#test.unit.test_field_validations.mock_entries">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mock_entries</span><span class="p">(</span><span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mock entry fields with valid values.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;Make&quot;</span><span class="p">:</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">get</span><span class="o">=</span><span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="s2">&quot;Toyota&quot;</span><span class="p">)),</span>
+        <span class="s2">&quot;Registration&quot;</span><span class="p">:</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">get</span><span class="o">=</span><span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="s2">&quot;ABC123&quot;</span><span class="p">)),</span>
+        <span class="s2">&quot;Model&quot;</span><span class="p">:</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">get</span><span class="o">=</span><span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="s2">&quot;Corolla&quot;</span><span class="p">)),</span>
+        <span class="s2">&quot;Fuel Type&quot;</span><span class="p">:</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">get</span><span class="o">=</span><span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="s2">&quot;Petrol&quot;</span><span class="p">)),</span>
+        <span class="s2">&quot;Vehicle Type&quot;</span><span class="p">:</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">get</span><span class="o">=</span><span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="s2">&quot;Sedan&quot;</span><span class="p">))</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="test_validate_year">
+<a class="viewcode-back" href="../../../test/test_field_validations.html#test.unit.test_field_validations.test_validate_year">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;year, expected&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s2">&quot;2020&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;1899&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                                            <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                                             <span class="kc">False</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;abcd&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_year</span><span class="p">(</span><span class="n">field_validations</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test the validate_year function.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">field_validations</span><span class="o">.</span><span class="n">validate_year</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span></div>
+
+
+
+<div class="viewcode-block" id="test_validate_date">
+<a class="viewcode-back" href="../../../test/test_field_validations.html#test.unit.test_field_validations.test_validate_date">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;date_str, expected&quot;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;01-01-2025&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;31-12-1999&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;2025-01-01&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;32-01-2025&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;abc-def-ghij&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_date</span><span class="p">(</span><span class="n">field_validations</span><span class="p">,</span> <span class="n">date_str</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test the validate_date function.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">field_validations</span><span class="o">.</span><span class="n">validate_date</span><span class="p">(</span><span class="n">date_str</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span></div>
+
+
+
+<div class="viewcode-block" id="test_validate_character_input">
+<a class="viewcode-back" href="../../../test/test_field_validations.html#test.unit.test_field_validations.test_validate_character_input">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;value, expected&quot;</span><span class="p">,</span>
+                         <span class="p">[(</span><span class="s2">&quot;Toyota&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                          <span class="p">(</span><span class="s2">&quot;Car123&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                          <span class="p">(</span><span class="s2">&quot;Car_123&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                          <span class="p">(</span><span class="s2">&quot;Car@!&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_character_input</span><span class="p">(</span><span class="n">field_validations</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test the validate_character_input function.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">field_validations</span><span class="o">.</span><span class="n">validate_character_input</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span></div>
+
+
+
+<div class="viewcode-block" id="test_validations_success">
+<a class="viewcode-back" href="../../../test/test_field_validations.html#test.unit.test_field_validations.test_validations_success">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validations_success</span><span class="p">(</span><span class="n">field_validations</span><span class="p">,</span> <span class="n">mock_entries</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test the validations function with valid inputs.&quot;&quot;&quot;</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">field_validations</span><span class="o">.</span><span class="n">validations</span><span class="p">(</span>
+        <span class="n">mock_entries</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="s2">&quot;2020&quot;</span><span class="p">,</span> <span class="n">service_date</span><span class="o">=</span><span class="s2">&quot;01-01-2025&quot;</span><span class="p">,</span>
+        <span class="n">tax_due_date</span><span class="o">=</span><span class="s2">&quot;01-06-2025&quot;</span><span class="p">,</span> <span class="n">tax_status</span><span class="o">=</span><span class="s2">&quot;Valid&quot;</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">errors</span> <span class="ow">is</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="test_validations_failure">
+<a class="viewcode-back" href="../../../test/test_field_validations.html#test.unit.test_field_validations.test_validations_failure">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validations_failure</span><span class="p">(</span><span class="n">field_validations</span><span class="p">,</span> <span class="n">mock_entries</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test the validations function with invalid inputs.&quot;&quot;&quot;</span>
+    <span class="n">mock_entries</span><span class="p">[</span><span class="s2">&quot;Make&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">field_validations</span><span class="o">.</span><span class="n">validations</span><span class="p">(</span>
+        <span class="n">mock_entries</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="s2">&quot;1899&quot;</span><span class="p">,</span> <span class="n">service_date</span><span class="o">=</span><span class="s2">&quot;2025-01-01&quot;</span><span class="p">,</span>
+        <span class="n">tax_due_date</span><span class="o">=</span><span class="s2">&quot;32-13-2025&quot;</span><span class="p">,</span> <span class="n">tax_status</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="s2">&quot;Make cannot be empty.&quot;</span> <span class="ow">in</span> <span class="n">errors</span>
+    <span class="k">assert</span> <span class="s2">&quot;Year must be a valid number between 1900 and the current year&quot;</span> \
+           <span class="ow">in</span> <span class="n">errors</span>
+    <span class="k">assert</span> <span class="s2">&quot;Service Date must be in dd-mm-yy format.&quot;</span> <span class="ow">in</span> <span class="n">errors</span>
+    <span class="k">assert</span> <span class="s2">&quot;Tax Due Date must be in dd-mm-yy format.&quot;</span> <span class="ow">in</span> <span class="n">errors</span>
+    <span class="k">assert</span> <span class="s2">&quot;Tax Status must be selected.&quot;</span> <span class="ow">in</span> <span class="n">errors</span></div>
+
+
+
+<div class="viewcode-block" id="test_update_validations">
+<a class="viewcode-back" href="../../../test/test_field_validations.html#test.unit.test_field_validations.test_update_validations">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_update_validations</span><span class="p">(</span><span class="n">field_validations</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test update_validations function with valid and invalid dates.&quot;&quot;&quot;</span>
+    <span class="n">valid_updates</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Service Date&quot;</span><span class="p">:</span> <span class="s2">&quot;01-01-2025&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;Tax Due Date&quot;</span><span class="p">:</span> <span class="s2">&quot;15-06-2025&quot;</span><span class="p">}</span>
+    <span class="n">invalid_updates</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Service Date&quot;</span><span class="p">:</span> <span class="s2">&quot;2025/01/01&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;Tax Due Date&quot;</span><span class="p">:</span> <span class="s2">&quot;invalid-date&quot;</span><span class="p">}</span>
+
+    <span class="k">assert</span> <span class="n">field_validations</span><span class="o">.</span><span class="n">update_validations</span><span class="p">(</span><span class="n">valid_updates</span><span class="p">)</span> <span class="o">==</span> <span class="p">[]</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">field_validations</span><span class="o">.</span><span class="n">update_validations</span><span class="p">(</span><span class="n">invalid_updates</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="s2">&quot;Date fields must be in dd-mm-yyyy format!&quot;</span> <span class="ow">in</span> <span class="n">errors</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, 730095122.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

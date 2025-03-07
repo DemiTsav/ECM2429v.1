@@ -1,0 +1,247 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>asset_management module &mdash; Fleet Management System 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="asset_management input field validations module" href="field_validations.html" />
+    <link rel="prev" title="database module" href="database.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Fleet Management System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Asset Management Backend Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tasks.html">startup tasks module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html">database module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">asset_management module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.backend.asset_management_handler.VehicleController"><code class="docutils literal notranslate"><span class="pre">VehicleController</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#asset_management.backend.asset_management_handler.VehicleController.add_vehicle"><code class="docutils literal notranslate"><span class="pre">VehicleController.add_vehicle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#asset_management.backend.asset_management_handler.VehicleController.confirm_deletion"><code class="docutils literal notranslate"><span class="pre">VehicleController.confirm_deletion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#asset_management.backend.asset_management_handler.VehicleController.delete_vehicle"><code class="docutils literal notranslate"><span class="pre">VehicleController.delete_vehicle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#asset_management.backend.asset_management_handler.VehicleController.get_all_vehicles"><code class="docutils literal notranslate"><span class="pre">VehicleController.get_all_vehicles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#asset_management.backend.asset_management_handler.VehicleController.perform_search"><code class="docutils literal notranslate"><span class="pre">VehicleController.perform_search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#asset_management.backend.asset_management_handler.VehicleController.retrieve_vehicle_info"><code class="docutils literal notranslate"><span class="pre">VehicleController.retrieve_vehicle_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#asset_management.backend.asset_management_handler.VehicleController.update_vehicle"><code class="docutils literal notranslate"><span class="pre">VehicleController.update_vehicle()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="field_validations.html">asset_management input field validations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="report_generation.html">reporting module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">Asset Management Frontend Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_diagrams/system_architecture.html">System Sequence Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test/index.html">Test Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Fleet Management System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Asset Management Backend Documentation</a></li>
+      <li class="breadcrumb-item active">asset_management module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/asset_management/backend/asset_management_handler.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-asset_management.backend.asset_management_handler">
+<span id="asset-management-module"></span><h1>asset_management module<a class="headerlink" href="#module-asset_management.backend.asset_management_handler" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="asset_management.backend.asset_management_handler.VehicleController">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">asset_management.backend.asset_management_handler.</span></span><span class="sig-name descname"><span class="pre">VehicleController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">VehicleDatabase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vehicle_table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asset_management/backend/asset_management_handler.html#VehicleController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.asset_management_handler.VehicleController" title="Link to this definition"></a></dt>
+<dd><p>Handles business logic for vehicle operations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.backend.asset_management_handler.VehicleController.add_vehicle">
+<span class="sig-name descname"><span class="pre">add_vehicle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Entry</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tax_status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StringVar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh_table_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_content_callback</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/asset_management/backend/asset_management_handler.html#VehicleController.add_vehicle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.asset_management_handler.VehicleController.add_vehicle" title="Link to this definition"></a></dt>
+<dd><p>Process adding a new vehicle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entries</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>tk.Entry</em><em>]</em>) – Dictionary of input fields.</p></li>
+<li><p><strong>tax_status</strong> (<em>tk.StringVar</em>) – The selected tax status.</p></li>
+<li><p><strong>refresh_table_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>]</em><em>, </em><em>None</em><em>]</em>) – Function to refresh</p></li>
+<li><p><strong>table.</strong> (<em>the</em>)</p></li>
+<li><p><strong>clear_content_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>]</em><em>, </em><em>None</em><em>]</em>) – Function to clear</p></li>
+<li><p><strong>fields.</strong> (<em>input</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.backend.asset_management_handler.VehicleController.confirm_deletion">
+<span class="sig-name descname"><span class="pre">confirm_deletion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selected_items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh_table_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_content_callback</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/asset_management/backend/asset_management_handler.html#VehicleController.confirm_deletion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.asset_management_handler.VehicleController.confirm_deletion" title="Link to this definition"></a></dt>
+<dd><p>Confirm deletion and enable delete button if a vehicle is selected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>selected_items</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of selected vehicle IDs.</p></li>
+<li><p><strong>refresh_table_callback</strong> (<em>callable</em><em>[</em><em>[</em><em>]</em><em>, </em><em>None</em><em>]</em>) – Function to refresh</p></li>
+<li><p><strong>table.</strong> (<em>the</em>)</p></li>
+<li><p><strong>clear_content_callback</strong> (<em>callable</em><em>[</em><em>[</em><em>]</em><em>, </em><em>None</em><em>]</em>) – Function to clear UI</p></li>
+<li><p><strong>components.</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deletion confirmed, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.backend.asset_management_handler.VehicleController.delete_vehicle">
+<span class="sig-name descname"><span class="pre">delete_vehicle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vehicle_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh_vehicle_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_dynamic_content</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/asset_management/backend/asset_management_handler.html#VehicleController.delete_vehicle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.asset_management_handler.VehicleController.delete_vehicle" title="Link to this definition"></a></dt>
+<dd><p>Delete a vehicle from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vehicle_id</strong> (<em>str</em>) – The ID of the vehicle to delete.</p></li>
+<li><p><strong>refresh_vehicle_table</strong> (<em>callable</em><em>[</em><em>[</em><em>]</em><em>, </em><em>None</em><em>]</em>) – Function to refresh</p></li>
+<li><p><strong>table.</strong> (<em>the vehicle</em>)</p></li>
+<li><p><strong>clear_dynamic_content</strong> (<em>callable</em><em>[</em><em>[</em><em>]</em><em>, </em><em>None</em><em>]</em>) – Function to clear UI</p></li>
+<li><p><strong>components.</strong></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.backend.asset_management_handler.VehicleController.get_all_vehicles">
+<span class="sig-name descname"><span class="pre">get_all_vehicles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/asset_management/backend/asset_management_handler.html#VehicleController.get_all_vehicles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.asset_management_handler.VehicleController.get_all_vehicles" title="Link to this definition"></a></dt>
+<dd><p>Retrieve all vehicles from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of vehicle records.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Dict[str, str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.backend.asset_management_handler.VehicleController.perform_search">
+<span class="sig-name descname"><span class="pre">perform_search</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/asset_management/backend/asset_management_handler.html#VehicleController.perform_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.asset_management_handler.VehicleController.perform_search" title="Link to this definition"></a></dt>
+<dd><p>Perform a search based on user input. If no search parameters
+are provided, return all vehicles.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.backend.asset_management_handler.VehicleController.retrieve_vehicle_info">
+<span class="sig-name descname"><span class="pre">retrieve_vehicle_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selected_items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/asset_management/backend/asset_management_handler.html#VehicleController.retrieve_vehicle_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.asset_management_handler.VehicleController.retrieve_vehicle_info" title="Link to this definition"></a></dt>
+<dd><p>Retrieve vehicle information from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>selected_items</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of selected vehicle IDs.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Vehicle information and ID
+if found, otherwise None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Tuple[Dict[str, str], str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.backend.asset_management_handler.VehicleController.update_vehicle">
+<span class="sig-name descname"><span class="pre">update_vehicle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vehicle_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh_vehicle_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_dynamic_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_entries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Widget</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/asset_management/backend/asset_management_handler.html#VehicleController.update_vehicle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.asset_management_handler.VehicleController.update_vehicle" title="Link to this definition"></a></dt>
+<dd><p>Process the update of a vehicle’s details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vehicle_id</strong> (<em>str</em>) – The ID of the vehicle to be updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="database.html" class="btn btn-neutral float-left" title="database module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="field_validations.html" class="btn btn-neutral float-right" title="asset_management input field validations module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, 730095122.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -9,6 +9,11 @@ from asset_management.frontend.asset_reporting import AssetReportingPage
 
 @pytest.fixture
 def temp_db():
+    """
+    Creates an in-memory SQLite database with a 'vehicles' table and
+    sample data.
+    Returns a mock database object for testing.
+    """
     import sqlite3
     conn = sqlite3.connect(":memory:")
     cursor = conn.cursor()
@@ -42,6 +47,10 @@ def temp_db():
 
 
 def test_generate_report(temp_db, mocker):
+    """
+    Tests the generate_report() function to ensure it retrieves and displays
+    the correct vehicle data for the selected report type.
+    """
     mock_fetch_report = mocker.patch.object(
         AssetReportingHandler,
         'fetch_report', return_value=[
@@ -63,6 +72,10 @@ def test_generate_report(temp_db, mocker):
 
 
 def test_generate_custom_report(temp_db, mocker):
+    """
+    Tests the generate_custom_report() function to ensure it retrieves 
+    the correct vehicle data based on user-selected filters.
+    """
     mock_fetch_custom_report = mocker.patch.object(
         AssetReportingHandler, 'fetch_custom_report', return_value=[(
             1, 'ABC123', 'Honda', 'Civic', 2005, 'Sedan', 'Diesel',
@@ -80,7 +93,10 @@ def test_generate_custom_report(temp_db, mocker):
 
 
 def test_export_to_csv(temp_db, mocker):
-
+    """
+    Tests the export_to_csv() function to ensure that report data 
+    is correctly written to a CSV file.
+    """
     mock_asksaveasfilename = mocker.patch.object(
         filedialog,
         'asksaveasfilename',

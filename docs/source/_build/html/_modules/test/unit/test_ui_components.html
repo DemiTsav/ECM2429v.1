@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>test.unit.test_ui_components &mdash; Fleet Management System 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Fleet Management System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/backend/index.html">Asset Management Backend Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management/frontend/index.html">Asset Management Frontend Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_diagrams/index.html">Visual Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../test/index.html">Test Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Fleet Management System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">test.unit.test_ui_components</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for test.unit.test_ui_components</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tkinter</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tkinter</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asset_management.frontend.ui_components</span><span class="w"> </span><span class="kn">import</span> <span class="n">UIComponents</span>
+
+
+<div class="viewcode-block" id="root">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.root">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">root</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fixture to create and return a Tkinter root window.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">tk</span><span class="o">.</span><span class="n">Tk</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="dynamic_content_frame">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.dynamic_content_frame">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dynamic_content_frame</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fixture to create and return a Tkinter Frame for dynamic content.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">root</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="vehicle_table">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.vehicle_table">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vehicle_table</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fixture to create and return a Treeview widget representing a vehicle</span>
+<span class="sd">    table.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Treeview</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="ui_components">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.ui_components">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ui_components</span><span class="p">(</span><span class="n">dynamic_content_frame</span><span class="p">,</span> <span class="n">vehicle_table</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fixture to create and return an instance of UIComponents.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">UIComponents</span><span class="p">(</span><span class="n">dynamic_content_frame</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">vehicle_table</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_button">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.test_create_button">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_create_button</span><span class="p">(</span><span class="n">ui_components</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test if create_button() creates a valid Tkinter Button with the correct</span>
+<span class="sd">    label.&quot;&quot;&quot;</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="p">()</span>
+    <span class="n">button</span> <span class="o">=</span> <span class="n">ui_components</span><span class="o">.</span><span class="n">create_button</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="s2">&quot;Click Me&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">button</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">button</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Click Me&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_dropdown">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.test_create_dropdown">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_create_dropdown</span><span class="p">(</span><span class="n">ui_components</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test if create_dropdown() creates a valid Tkinter Combobox with default</span>
+<span class="sd">    selection.&quot;&quot;&quot;</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="p">()</span>
+    <span class="n">dropdown</span> <span class="o">=</span> <span class="n">ui_components</span><span class="o">.</span><span class="n">create_dropdown</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="s2">&quot;Test Field&quot;</span><span class="p">,</span>
+                                             <span class="p">[</span><span class="s2">&quot;Option1&quot;</span><span class="p">,</span> <span class="s2">&quot;Option2&quot;</span><span class="p">],</span>
+                                             <span class="s2">&quot;Option1&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dropdown</span><span class="p">,</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Combobox</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">dropdown</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Option1&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_checkbox">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.test_create_checkbox">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_create_checkbox</span><span class="p">(</span><span class="n">ui_components</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test if create_checkbox() returns a valid Checkbutton and BooleanVar.&quot;&quot;&quot;</span>
+    <span class="n">var</span><span class="p">,</span> <span class="n">checkbox</span> <span class="o">=</span> <span class="n">ui_components</span><span class="o">.</span><span class="n">create_checkbox</span><span class="p">(</span><span class="s2">&quot;Test Checkbox&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">checkbox</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">Checkbutton</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">BooleanVar</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_text_entry">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.test_create_text_entry">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_create_text_entry</span><span class="p">(</span><span class="n">ui_components</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test if create_text_entry() creates a valid Tkinter Entry with default</span>
+<span class="sd">    text.&quot;&quot;&quot;</span>
+    <span class="n">entry</span> <span class="o">=</span> <span class="n">ui_components</span><span class="o">.</span><span class="n">create_text_entry</span><span class="p">(</span><span class="s2">&quot;Test Entry&quot;</span><span class="p">,</span> <span class="s2">&quot;Default Text&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">Entry</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Default Text&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="test_toggle_entry_state">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.test_toggle_entry_state">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_toggle_entry_state</span><span class="p">(</span><span class="n">ui_components</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test if toggle_entry_state() correctly enables/disables an entry field</span>
+<span class="sd">    based on a checkbox state.&quot;&quot;&quot;</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">BooleanVar</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">entry</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Entry</span><span class="p">()</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">)</span>
+    <span class="n">ui_components</span><span class="o">.</span><span class="n">toggle_entry_state</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
+    <span class="n">entry</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">assert_called_with</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;disabled&quot;</span><span class="p">)</span>
+    <span class="n">var</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ui_components</span><span class="o">.</span><span class="n">toggle_entry_state</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
+    <span class="n">entry</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">assert_called_with</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;readonly&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_clear_dynamic_content">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.test_clear_dynamic_content">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_clear_dynamic_content</span><span class="p">(</span><span class="n">ui_components</span><span class="p">,</span> <span class="n">dynamic_content_frame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test if clear_dynamic_content() removes all child widgets from the</span>
+<span class="sd">    dynamic content frame.&quot;&quot;&quot;</span>
+    <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">dynamic_content_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dynamic_content_frame</span><span class="o">.</span><span class="n">winfo_children</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">ui_components</span><span class="o">.</span><span class="n">clear_dynamic_content</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dynamic_content_frame</span><span class="o">.</span><span class="n">winfo_children</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_enable_delete_button">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.test_enable_delete_button">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_enable_delete_button</span><span class="p">(</span><span class="n">ui_components</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test if enable_delete_button() enables/disables the delete button based</span>
+<span class="sd">    on row selection.&quot;&quot;&quot;</span>
+    <span class="n">delete_button</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">()</span>
+    <span class="n">ui_components</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">selection</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;item1&quot;</span><span class="p">])</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="n">ui_components</span><span class="o">.</span><span class="n">enable_delete_button</span><span class="p">(</span><span class="n">delete_button</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">selected</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;item1&quot;</span><span class="p">]</span>
+    <span class="n">delete_button</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">assert_called_with</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">)</span>
+
+    <span class="n">ui_components</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">selection</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">return_value</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="n">ui_components</span><span class="o">.</span><span class="n">enable_delete_button</span><span class="p">(</span><span class="n">delete_button</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">selected</span> <span class="ow">is</span> <span class="kc">None</span>
+    <span class="n">delete_button</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">assert_called_with</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;disabled&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_update_vehicle_table">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.test_update_vehicle_table">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_update_vehicle_table</span><span class="p">(</span><span class="n">ui_components</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test if update_vehicle_table() correctly updates the Treeview with new</span>
+<span class="sd">    vehicle data.&quot;&quot;&quot;</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">ui_components</span><span class="o">.</span><span class="n">vehicle_table</span><span class="p">,</span> <span class="s2">&quot;insert&quot;</span><span class="p">)</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">ui_components</span><span class="o">.</span><span class="n">vehicle_table</span><span class="p">,</span> <span class="s2">&quot;delete&quot;</span><span class="p">)</span>
+    <span class="n">ui_components</span><span class="o">.</span><span class="n">update_vehicle_table</span><span class="p">([</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;ABC123&quot;</span><span class="p">,</span> <span class="s2">&quot;Toyota&quot;</span><span class="p">,</span> <span class="s2">&quot;Corolla&quot;</span><span class="p">,</span> <span class="mi">2020</span><span class="p">)</span>
+        <span class="p">])</span>
+    <span class="n">ui_components</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">insert</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="test_display_message">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.test_display_message">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_display_message</span><span class="p">(</span><span class="n">ui_components</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test if display_message() correctly displays a label with the specified</span>
+<span class="sd">    text and color.&quot;&quot;&quot;</span>
+    <span class="n">ui_components</span><span class="o">.</span><span class="n">display_message</span><span class="p">(</span><span class="s2">&quot;Test Message&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">ui_components</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="o">.</span><span class="n">winfo_children</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">label</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Test Message&quot;</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">label</span><span class="p">[</span><span class="s2">&quot;fg&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;red&quot;</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_checkbox_updates">
+<a class="viewcode-back" href="../../../test/test_ui_components.html#test.unit.test_ui_components.test_checkbox_updates">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_checkbox_updates</span><span class="p">(</span><span class="n">ui_components</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test if checkbox_updates() correctly creates a checkbox and entry field,</span>
+<span class="sd">    and toggles their states.&quot;&quot;&quot;</span>
+    <span class="n">vehicle_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Tax Due Date&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-05-01&quot;</span><span class="p">,</span> <span class="s2">&quot;Fuel Type&quot;</span><span class="p">:</span> <span class="s2">&quot;Petrol&quot;</span><span class="p">}</span>
+    <span class="n">ui_components</span><span class="o">.</span><span class="n">checkbox_updates</span><span class="p">(</span><span class="s2">&quot;Tax Due Date&quot;</span><span class="p">,</span> <span class="n">vehicle_info</span><span class="p">)</span>
+    <span class="n">field_frame</span> <span class="o">=</span> <span class="n">ui_components</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="o">.</span><span class="n">winfo_children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">checkbox</span> <span class="o">=</span> <span class="n">field_frame</span><span class="o">.</span><span class="n">winfo_children</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">entry</span> <span class="o">=</span> <span class="n">field_frame</span><span class="o">.</span><span class="n">winfo_children</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">mock_var</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">mock_var</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">checkbox</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">mock_var</span><span class="p">)</span>
+
+    <span class="n">ui_components</span><span class="o">.</span><span class="n">toggle_entry_state</span><span class="p">(</span><span class="n">mock_var</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;disabled&quot;</span>
+
+    <span class="n">mock_var</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ui_components</span><span class="o">.</span><span class="n">toggle_entry_state</span><span class="p">(</span><span class="n">mock_var</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;readonly&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, 730095122.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

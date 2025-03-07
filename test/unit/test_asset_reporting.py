@@ -6,6 +6,8 @@ from asset_management.frontend.asset_reporting import AssetReportingHandler
 
 @pytest.fixture
 def temp_db():
+    """Creates an in-memory SQLite database with a 'vehicles' table and sample
+    data."""
     conn = sqlite3.connect(":memory:")
     cursor = conn.cursor()
     cursor.execute("""
@@ -38,6 +40,8 @@ def temp_db():
 
 
 def test_get_report_query():
+    """Tests if get_report_query() returns the correct SQL queries based on
+    the report type."""
     assert (AssetReportingHandler.get_report_query("All Vehicles") ==
             "SELECT * FROM vehicles")
     assert (AssetReportingHandler.get_report_query(
@@ -58,6 +62,8 @@ def test_get_report_query():
 
 
 def test_fetch_report(temp_db, mocker):
+    """Tests if fetch_report() retrieves the correct data for a given report#
+    type."""
     mock_fetch_report = mocker.patch.object(
         AssetReportingHandler,
         'fetch_report',
@@ -73,6 +79,8 @@ def test_fetch_report(temp_db, mocker):
 
 
 def test_fetch_custom_report(temp_db, mocker):
+    """Tests if fetch_custom_report() correctly filters vehicles based on
+    given criteria."""
     filters = {"Fuel Type": "Diesel"}
     report = AssetReportingHandler.fetch_custom_report(temp_db, filters)
     assert len(report) == 2

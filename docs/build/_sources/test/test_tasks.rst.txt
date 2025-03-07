@@ -1,0 +1,5 @@
+Start-up Tasks Tests
+======================================
+
+.. automodule:: test.unit.tasks
+    :members:

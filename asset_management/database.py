@@ -3,6 +3,7 @@ from typing import Optional, Dict, List, Tuple
 
 
 class VehicleDatabase:
+    """ Class to interact with the vehicle database. """
     def __init__(self, db_name: str = "vehicles.db"):
         """
         Initialize the VehicleDatabase instance.
@@ -24,7 +25,6 @@ class VehicleDatabase:
         """
         Create the vehicles table if it doesn't exist.
         """
-
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS vehicles (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

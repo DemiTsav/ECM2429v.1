@@ -14,12 +14,7 @@ documentation for details.
    :maxdepth: 2
    :caption: Contents:
 
-   tasks
-   database
-   asset_management_handler
-   field_validations
-   report_generation
-   asset_reporting
-   ui_manager
-   ui_components
-   system_architecture
+   asset_management/backend/index
+   asset_management/frontend/index
+   design_diagrams/index
+   test/index
