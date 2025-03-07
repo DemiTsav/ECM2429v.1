@@ -1,2 +1,4 @@
-pytest
-coverage
+pytest==8.4.3
+coverage==7.6.12
+pytest-mock==3.14.0#
+sphinxcontrib-plantuml

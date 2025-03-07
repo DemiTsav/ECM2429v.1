@@ -1,0 +1,238 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gui module &mdash; Fleet Management System 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="components module" href="ui_components.html" />
+    <link rel="prev" title="format reports module" href="asset_reporting.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Fleet Management System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tasks.html">startup tasks module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">database module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asset_management_handler.html">asset_management module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field_validations.html">asset_management input field validations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="report_generation.html">reporting module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asset_reporting.html">format reports module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">gui module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI.clear_dynamic_content"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI.clear_dynamic_content()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI.create_widgets"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI.create_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI.display_vehicle_data"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI.display_vehicle_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI.open_asset_reporting_page"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI.open_asset_reporting_page()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI.open_new_window"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI.open_new_window()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI.refresh_vehicle_table"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI.refresh_vehicle_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI.show_add_vehicle_form"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI.show_add_vehicle_form()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI.show_delete_vehicle_prompt"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI.show_delete_vehicle_prompt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI.show_search_form"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI.show_search_form()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI.show_update_vehicle_form"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI.show_update_vehicle_form()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.frontend.ui_manager.AssetManagementUI.update_vehicle_values"><code class="docutils literal notranslate"><span class="pre">AssetManagementUI.update_vehicle_values()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ui_components.html">components module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_architecture.html">Data class diagram</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Fleet Management System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">gui module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ui_manager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-asset_management.frontend.ui_manager">
+<span id="gui-module"></span><h1>gui module<a class="headerlink" href="#module-asset_management.frontend.ui_manager" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">asset_management.frontend.ui_manager.</span></span><span class="sig-name descname"><span class="pre">AssetManagementUI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="asset_management_handler.html#asset_management.backend.asset_management_handler.VehicleController" title="asset_management.backend.asset_management_handler.VehicleController"><span class="pre">VehicleController</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI" title="Link to this definition"></a></dt>
+<dd><p>A class for displaying the asset management UI.</p>
+<p>Inherits from Tkinter’s Frame class. This UI allows users to interact
+with asset data including adding, updating, deleting, and searching for
+vehicles.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI.clear_dynamic_content">
+<span class="sig-name descname"><span class="pre">clear_dynamic_content</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI.clear_dynamic_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI.clear_dynamic_content" title="Link to this definition"></a></dt>
+<dd><p>Clear all widgets from the dynamic content frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI.create_widgets">
+<span class="sig-name descname"><span class="pre">create_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI.create_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI.create_widgets" title="Link to this definition"></a></dt>
+<dd><p>Initialize all widgets and layout.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI.display_vehicle_data">
+<span class="sig-name descname"><span class="pre">display_vehicle_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selected_items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI.display_vehicle_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI.display_vehicle_data" title="Link to this definition"></a></dt>
+<dd><p>Display vehicle data to be updated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>selected_items</strong> (<em>list</em>) – The selected items from the vehicle table.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI.open_asset_reporting_page">
+<span class="sig-name descname"><span class="pre">open_asset_reporting_page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Toplevel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">VehicleDatabase</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI.open_asset_reporting_page"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI.open_asset_reporting_page" title="Link to this definition"></a></dt>
+<dd><p>Open the page to generate asset reports.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_window</strong> (<em>tk.Toplevel</em>) – The newly created window for asset</p></li>
+<li><p><strong>reporting.</strong></p></li>
+<li><p><strong>db</strong> (<em>VehicleDatabase</em>) – The database connection instance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI.open_new_window">
+<span class="sig-name descname"><span class="pre">open_new_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">create_widget</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI.open_new_window"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI.open_new_window" title="Link to this definition"></a></dt>
+<dd><p>Initialize a new window for asset reporting functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>create_widget</strong> (<em>Callable</em>) – The function to create the widget in the</p></li>
+<li><p><strong>window.</strong> (<em>new</em>)</p></li>
+<li><p><strong>*args</strong> – Additional arguments to pass to the widget creation</p></li>
+<li><p><strong>function.</strong></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI.refresh_vehicle_table">
+<span class="sig-name descname"><span class="pre">refresh_vehicle_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI.refresh_vehicle_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI.refresh_vehicle_table" title="Link to this definition"></a></dt>
+<dd><p>Fetch and display all vehicles in the table.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI.show_add_vehicle_form">
+<span class="sig-name descname"><span class="pre">show_add_vehicle_form</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI.show_add_vehicle_form"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI.show_add_vehicle_form" title="Link to this definition"></a></dt>
+<dd><p>Display the add vehicle form using grid layout.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI.show_delete_vehicle_prompt">
+<span class="sig-name descname"><span class="pre">show_delete_vehicle_prompt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI.show_delete_vehicle_prompt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI.show_delete_vehicle_prompt" title="Link to this definition"></a></dt>
+<dd><p>Display a confirmation prompt to delete a vehicle.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI.show_search_form">
+<span class="sig-name descname"><span class="pre">show_search_form</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI.show_search_form"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI.show_search_form" title="Link to this definition"></a></dt>
+<dd><p>Display the search form and execute search based on criteria.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI.show_update_vehicle_form">
+<span class="sig-name descname"><span class="pre">show_update_vehicle_form</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI.show_update_vehicle_form"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI.show_update_vehicle_form" title="Link to this definition"></a></dt>
+<dd><p>Display the form to update an existing vehicle.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.frontend.ui_manager.AssetManagementUI.update_vehicle_values">
+<span class="sig-name descname"><span class="pre">update_vehicle_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/frontend/ui_manager.html#AssetManagementUI.update_vehicle_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.frontend.ui_manager.AssetManagementUI.update_vehicle_values" title="Link to this definition"></a></dt>
+<dd><p>Update the vehicle table with new data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vehicles</strong> (<em>List</em><em>[</em><em>Tuple</em><em>]</em>) – List of vehicle details to populate table.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="asset_reporting.html" class="btn btn-neutral float-left" title="format reports module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ui_components.html" class="btn btn-neutral float-right" title="components module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, 730095122.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

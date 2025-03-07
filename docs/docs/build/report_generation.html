@@ -1,0 +1,193 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>reporting module &mdash; Fleet Management System 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="format reports module" href="asset_reporting.html" />
+    <link rel="prev" title="asset_management input field validations module" href="field_validations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Fleet Management System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tasks.html">startup tasks module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">database module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="asset_management_handler.html">asset_management module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field_validations.html">asset_management input field validations module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">reporting module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#asset_management.backend.report_generation.AssetReportingHandler"><code class="docutils literal notranslate"><span class="pre">AssetReportingHandler</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.backend.report_generation.AssetReportingHandler.fetch_custom_report"><code class="docutils literal notranslate"><span class="pre">AssetReportingHandler.fetch_custom_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.backend.report_generation.AssetReportingHandler.fetch_report"><code class="docutils literal notranslate"><span class="pre">AssetReportingHandler.fetch_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asset_management.backend.report_generation.AssetReportingHandler.get_report_query"><code class="docutils literal notranslate"><span class="pre">AssetReportingHandler.get_report_query()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="asset_reporting.html">format reports module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_manager.html">gui module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_components.html">components module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_architecture.html">Data class diagram</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Fleet Management System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">reporting module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/report_generation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-asset_management.backend.report_generation">
+<span id="reporting-module"></span><h1>reporting module<a class="headerlink" href="#module-asset_management.backend.report_generation" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="asset_management.backend.report_generation.AssetReportingHandler">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">asset_management.backend.report_generation.</span></span><span class="sig-name descname"><span class="pre">AssetReportingHandler</span></span><a class="reference internal" href="_modules/asset_management/backend/report_generation.html#AssetReportingHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.report_generation.AssetReportingHandler" title="Link to this definition"></a></dt>
+<dd><p>Handles generating predefined and custom asset reports from the database.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.backend.report_generation.AssetReportingHandler.fetch_custom_report">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_custom_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">VehicleDatabase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/asset_management/backend/report_generation.html#AssetReportingHandler.fetch_custom_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.report_generation.AssetReportingHandler.fetch_custom_report" title="Link to this definition"></a></dt>
+<dd><p>Generates a custom report based on user-defined filters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> (<em>VehicleDatabase</em>) – The database instance to query.</p></li>
+<li><p><strong>filters</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – A dictionary of field names and their</p></li>
+<li><p><strong>values.</strong> (<em>corresponding filter</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of tuples representing the filtered
+report data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.backend.report_generation.AssetReportingHandler.fetch_report">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">VehicleDatabase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/asset_management/backend/report_generation.html#AssetReportingHandler.fetch_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.report_generation.AssetReportingHandler.fetch_report" title="Link to this definition"></a></dt>
+<dd><p>Fetches report data from the database based on a predefined report
+type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> (<em>VehicleDatabase</em>) – The database instance to query.</p></li>
+<li><p><strong>report_type</strong> (<em>str</em>) – The type of report to generate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of tuples representing the report data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="asset_management.backend.report_generation.AssetReportingHandler.get_report_query">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_report_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/asset_management/backend/report_generation.html#AssetReportingHandler.get_report_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#asset_management.backend.report_generation.AssetReportingHandler.get_report_query" title="Link to this definition"></a></dt>
+<dd><p>Returns the SQL query for predefined report types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>report_type</strong> (<em>str</em>) – The type of report requested.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The SQL query string if a valid report type
+is provided, else None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="field_validations.html" class="btn btn-neutral float-left" title="asset_management input field validations module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="asset_reporting.html" class="btn btn-neutral float-right" title="format reports module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, 730095122.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

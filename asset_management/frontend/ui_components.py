@@ -170,14 +170,13 @@ class UIComponents:
         entry = tk.Entry(field_frame)
         entry.pack(side="left", fill="x", expand=True)
         entry.insert(0, vehicle_info.get(field, ""))
-        entry.config(state="disabled")  # Initially disabled
+        entry.config(state="disabled")
 
         def toggle_entry_state(*args, var=var, entry=entry):
             entry.config(state="normal" if var.get() else "disabled")
 
         var.trace_add("write", lambda *args: toggle_entry_state(var, entry))
 
-        # Adjusting field names
         if field in ["Tax Due Date", "Fuel Type", "Service Date"]:
             field = field.replace(" ", "_").lower()
         elif field == "Vehicle Type":

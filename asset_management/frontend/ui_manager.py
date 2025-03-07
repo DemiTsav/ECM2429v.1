@@ -132,7 +132,7 @@ class AssetManagementUI(tk.Frame):
                 row=i+1, column=0, sticky="w", padx=5, pady=2)
             entry = tk.Entry(self.dynamic_content_frame)
             entry.grid(row=i+1, column=1, sticky="ew", padx=5, pady=2)
-            entries[field] = entry  # Store entry widget reference
+            entries[field] = entry
 
         tk.Label(self.dynamic_content_frame, text="Tax Status").grid(
             row=len(fields) + 1, column=0, sticky="w", padx=5, pady=2)
@@ -144,7 +144,6 @@ class AssetManagementUI(tk.Frame):
         tax_status.grid(row=len(fields) + 1, column=1, sticky="ew", padx=5,
                         pady=2)
 
-        # Button passes 'entries' and gets tax_status when clicked
         tk.Button(
             self.dynamic_content_frame,
             text="Add Vehicle",
@@ -213,7 +212,7 @@ class AssetManagementUI(tk.Frame):
             font=("Helvetica", 14)
         ).pack(pady=5)
 
-        update_entries = {}  # Store checkbox and entry widgets
+        update_entries = {}
         editable_fields = {"Service Date", "Tax Due Date", "Tax Status"}
 
         for i, (field, value) in enumerate(vehicle_info.items()):
@@ -291,7 +290,6 @@ class AssetManagementUI(tk.Frame):
             entry = tk.Entry(frame, width=20)
             entry.pack(side="left", expand=True, padx=2)
 
-            # Bind key release event to trigger perform_search dynamically
             entry.bind(
                 "<KeyRelease>",
                 lambda event: self.update_vehicle_values(
@@ -311,7 +309,6 @@ class AssetManagementUI(tk.Frame):
             self.vehicle_table.delete(row)
 
         if results:
-            # Insert new rows for each vehicle in the results
             for vehicle in results:
                 print(vehicle)
                 self.vehicle_table.insert("", tk.END, values=vehicle)

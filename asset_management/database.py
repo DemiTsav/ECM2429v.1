@@ -127,7 +127,7 @@ class VehicleDatabase:
         query = f"UPDATE vehicles SET {set_clause} WHERE id = ?"
 
         values = list(updates.values())
-        values.append(vehicle_id)  # Add vehicle_id to the parameters
+        values.append(vehicle_id)
 
         self.cursor.execute(query, values)
         self.connection.commit()

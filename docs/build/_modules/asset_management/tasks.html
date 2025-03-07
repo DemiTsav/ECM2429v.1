@@ -1,0 +1,199 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>asset_management.tasks &mdash; Fleet Management System 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Fleet Management System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tasks.html">startup tasks module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../database.html">database module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../asset_management_handler.html">asset_management module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../field_validations.html">asset_management input field validations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../report_generation.html">reporting module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../asset_reporting.html">format reports module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ui_manager.html">gui module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ui_components.html">components module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../system_architecture.html">Data class diagram</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Fleet Management System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">asset_management.tasks</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for asset_management.tasks</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">asset_management.database</span><span class="w"> </span><span class="kn">import</span> <span class="n">VehicleDatabase</span>
+
+<span class="n">db</span> <span class="o">=</span> <span class="n">VehicleDatabase</span><span class="p">()</span>
+
+<div class="viewcode-block" id="run_sample_tasks">
+<a class="viewcode-back" href="../../tasks.html#asset_management.tasks.run_sample_tasks">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_sample_tasks</span><span class="p">(</span><span class="n">db</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform sample tasks on the VehicleDatabase.</span>
+
+<span class="sd">    :param db: An instance of the VehicleDatabase class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sample_vehicles</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;registration&quot;</span><span class="p">:</span> <span class="s2">&quot;ABC123&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;make&quot;</span><span class="p">:</span> <span class="s2">&quot;Toyota&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;Corolla&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2015</span><span class="p">,</span>
+            <span class="s2">&quot;vehicle_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Car&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fuel_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Petrol&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;service_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-12-15&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tax_due_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-01-01&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tax_status&quot;</span><span class="p">:</span> <span class="s2">&quot;Current&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;registration&quot;</span><span class="p">:</span> <span class="s2">&quot;XYZ456&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;make&quot;</span><span class="p">:</span> <span class="s2">&quot;Honda&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;Civic&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2020</span><span class="p">,</span>
+            <span class="s2">&quot;vehicle_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Sedan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fuel_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Diesel&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;service_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-11-01&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tax_due_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-02-01&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tax_status&quot;</span><span class="p">:</span> <span class="s2">&quot;Due&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;registration&quot;</span><span class="p">:</span> <span class="s2">&quot;LMN789&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;make&quot;</span><span class="p">:</span> <span class="s2">&quot;Ford&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;Focus&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2018</span><span class="p">,</span>
+            <span class="s2">&quot;vehicle_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Hatchback&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fuel_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Petrol&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;service_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-08-10&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tax_due_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-03-01&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tax_status&quot;</span><span class="p">:</span> <span class="s2">&quot;Current&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;registration&quot;</span><span class="p">:</span> <span class="s2">&quot;DEF012&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;make&quot;</span><span class="p">:</span> <span class="s2">&quot;Chevrolet&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;Impala&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2021</span><span class="p">,</span>
+            <span class="s2">&quot;vehicle_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Sedan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fuel_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Electric&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;service_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-07-22&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tax_due_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-04-01&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tax_status&quot;</span><span class="p">:</span> <span class="s2">&quot;Due&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;registration&quot;</span><span class="p">:</span> <span class="s2">&quot;GHI345&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;make&quot;</span><span class="p">:</span> <span class="s2">&quot;BMW&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;X5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2022</span><span class="p">,</span>
+            <span class="s2">&quot;vehicle_type&quot;</span><span class="p">:</span> <span class="s2">&quot;SUV&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fuel_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Hybrid&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;service_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-10-05&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tax_due_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-05-01&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tax_status&quot;</span><span class="p">:</span> <span class="s2">&quot;Current&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">vehicle</span> <span class="ow">in</span> <span class="n">sample_vehicles</span><span class="p">:</span>
+        <span class="n">existing_vehicle</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query_vehicles</span><span class="p">(</span>
+            <span class="s2">&quot;SELECT * FROM vehicles WHERE registration = ?&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">vehicle</span><span class="p">[</span><span class="s2">&quot;registration&quot;</span><span class="p">],)</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">existing_vehicle</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">add_vehicle</span><span class="p">(</span><span class="o">**</span><span class="n">vehicle</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added vehicle: </span><span class="si">{</span><span class="n">vehicle</span><span class="p">[</span><span class="s1">&#39;registration&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vehicle already exists: </span><span class="si">{</span><span class="n">vehicle</span><span class="p">[</span><span class="s1">&#39;registration&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">vehicles</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query_vehicles</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM vehicles&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vehicle List:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">vehicle</span> <span class="ow">in</span> <span class="n">vehicles</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span></div>
+
+
+
+<span class="n">run_sample_tasks</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, 730095122.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

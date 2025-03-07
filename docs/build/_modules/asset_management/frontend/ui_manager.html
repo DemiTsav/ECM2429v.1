@@ -1,0 +1,507 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>asset_management.frontend.ui_manager &mdash; Fleet Management System 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Fleet Management System
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks.html">startup tasks module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../database.html">database module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_management_handler.html">asset_management module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../field_validations.html">asset_management input field validations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../report_generation.html">reporting module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../asset_reporting.html">format reports module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ui_manager.html">gui module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ui_components.html">components module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../system_architecture.html">Data class diagram</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Fleet Management System</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">asset_management.frontend.ui_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for asset_management.frontend.ui_manager</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tkinter</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tkinter</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asset_management.backend.asset_management_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">VehicleController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asset_management.frontend.asset_reporting</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssetReportingPage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asset_management.backend.asset_management_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">VehicleDatabase</span>
+
+
+<div class="viewcode-block" id="AssetManagementUI">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AssetManagementUI</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for displaying the asset management UI.</span>
+
+<span class="sd">    Inherits from Tkinter&#39;s Frame class. This UI allows users to interact</span>
+<span class="sd">    with asset data including adding, updating, deleting, and searching for</span>
+<span class="sd">    vehicles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">tk</span><span class="o">.</span><span class="n">Tk</span><span class="p">,</span> <span class="n">controller</span><span class="p">:</span> <span class="n">VehicleController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Asset Management Page.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parent (tk.Tk): The parent Tkinter window.</span>
+<span class="sd">            controller (VehicleController): The business logic controller.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">connection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">cursor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_entries</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_entries</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_widgets</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AssetManagementUI.create_widgets">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.create_widgets">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize all widgets and layout.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_title_label</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_vehicle_table</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_action_buttons</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_dynamic_content_frame</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_vehicle_table</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_title_label</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create and pack the title label.&quot;&quot;&quot;</span>
+        <span class="n">title_label</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Council Asset Management&quot;</span><span class="p">,</span>
+            <span class="n">font</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">title_label</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_vehicle_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create vehicle table and scrollbar.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table_frame</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table_frame</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Registration&quot;</span><span class="p">,</span> <span class="s2">&quot;Make&quot;</span><span class="p">,</span> <span class="s2">&quot;Model&quot;</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Type&quot;</span><span class="p">,</span>
+                   <span class="s2">&quot;Fuel&quot;</span><span class="p">,</span> <span class="s2">&quot;Service Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Tax Due Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Tax Status&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Treeview</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table_frame</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
+            <span class="n">show</span><span class="o">=</span><span class="s2">&quot;headings&quot;</span><span class="p">,</span>
+            <span class="n">selectmode</span><span class="o">=</span><span class="s1">&#39;browse&#39;</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">heading</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+
+        <span class="n">scrollbar</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Scrollbar</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table_frame</span><span class="p">,</span>
+            <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">yview</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">yscrollcommand</span><span class="o">=</span><span class="n">scrollbar</span><span class="o">.</span><span class="n">set</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">scrollbar</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_action_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create and pack action buttons.&quot;&quot;&quot;</span>
+        <span class="n">actions_frame</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">actions_frame</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="n">buttons</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;Add Vehicle&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_add_vehicle_form</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Update Vehicle&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_update_vehicle_form</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Delete Vehicle&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_delete_vehicle_prompt</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Search Vehicles&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_search_form</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Asset Reporting&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_new_window</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">open_asset_reporting_page</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">controller</span>
+                <span class="p">))</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">buttons</span><span class="p">:</span>
+            <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">actions_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
+                <span class="n">side</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+                <span class="n">padx</span><span class="o">=</span><span class="mi">5</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_dynamic_content_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the dynamic content frame that holds forms.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AssetManagementUI.refresh_vehicle_table">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.refresh_vehicle_table">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">refresh_vehicle_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch and display all vehicles in the table.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">get_children</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="n">vehicles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">get_all_vehicles</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">vehicles</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">vehicle</span> <span class="ow">in</span> <span class="n">vehicles</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">vehicle</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AssetManagementUI.show_add_vehicle_form">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_add_vehicle_form">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_add_vehicle_form</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Display the add vehicle form using grid layout.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_dynamic_content</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_vehicle_table</span><span class="p">()</span>
+        <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Add Vehicle&quot;</span><span class="p">,</span>
+                 <span class="n">font</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">columnspan</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                              <span class="n">pady</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Registration&quot;</span><span class="p">,</span> <span class="s2">&quot;Make&quot;</span><span class="p">,</span> <span class="s2">&quot;Model&quot;</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Vehicle Type&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;Fuel Type&quot;</span><span class="p">,</span> <span class="s2">&quot;Service Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Tax Due Date&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fields</span><span class="p">):</span>
+            <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span>
+                <span class="n">row</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">)</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;ew&quot;</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">entries</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry</span>
+
+        <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Tax Status&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span>
+            <span class="n">row</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">tax_status</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Combobox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;Tax Paid&quot;</span><span class="p">,</span> <span class="s2">&quot;Tax Due&quot;</span><span class="p">,</span> <span class="s2">&quot;SORN&quot;</span><span class="p">,</span> <span class="s2">&quot;Exempt&quot;</span>
+            <span class="p">],</span>
+            <span class="n">state</span><span class="o">=</span><span class="s2">&quot;readonly&quot;</span><span class="p">)</span>
+        <span class="n">tax_status</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;ew&quot;</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                        <span class="n">pady</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Add Vehicle&quot;</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">VehicleController</span><span class="o">.</span><span class="n">add_vehicle</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">entries</span><span class="p">,</span>
+                <span class="n">tax_status</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">refresh_vehicle_table</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">clear_dynamic_content</span>
+                <span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">columnspan</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AssetManagementUI.show_delete_vehicle_prompt">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_delete_vehicle_prompt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_delete_vehicle_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display a confirmation prompt to delete a vehicle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">selected_items</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">selection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_dynamic_content</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">selected_items</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh_vehicle_table</span><span class="p">()</span>
+            <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Please select a vehicle to delete.&quot;</span><span class="p">,</span>
+                <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">VehicleController</span><span class="o">.</span><span class="n">confirm_deletion</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">selected_items</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">refresh_vehicle_table</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">clear_dynamic_content</span>
+                <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AssetManagementUI.show_update_vehicle_form">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_update_vehicle_form">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_update_vehicle_form</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display the form to update an existing vehicle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">selected_items</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">selection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_dynamic_content</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">selected_items</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh_vehicle_table</span><span class="p">()</span>
+            <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Select a vehicle to update.&quot;</span><span class="p">,</span>
+                <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">display_vehicle_data</span><span class="p">(</span><span class="n">selected_items</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AssetManagementUI.display_vehicle_data">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.display_vehicle_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_vehicle_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_items</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display vehicle data to be updated.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            selected_items (list): The selected items from the vehicle table.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vehicle_info</span><span class="p">,</span> <span class="n">vehicle_id</span> <span class="o">=</span> <span class="n">VehicleController</span><span class="o">.</span><span class="n">retrieve_vehicle_info</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">selected_items</span>
+            <span class="p">)</span>
+        <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Updating Vehicle ID: </span><span class="si">{</span><span class="n">vehicle_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">font</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="n">update_entries</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">editable_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Service Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Tax Due Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Tax Status&quot;</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vehicle_info</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">editable_fields</span><span class="p">:</span>
+
+                <span class="n">var</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">BooleanVar</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">checkbox</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Checkbutton</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span>
+                    <span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">variable</span><span class="o">=</span><span class="n">var</span>
+                    <span class="p">)</span>
+                <span class="n">checkbox</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">anchor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+                <span class="n">entry</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">)</span>
+                <span class="n">entry</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="n">entry</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;disabled&quot;</span><span class="p">)</span>
+                <span class="n">entry</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+                <span class="k">def</span><span class="w"> </span><span class="nf">toggle_entry_state</span><span class="p">(</span><span class="n">entry</span><span class="o">=</span><span class="n">entry</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="n">var</span><span class="p">):</span>
+                    <span class="n">entry</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span> <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;disabled&quot;</span><span class="p">)</span>
+
+                <span class="n">var</span><span class="o">.</span><span class="n">trace_add</span><span class="p">(</span><span class="s2">&quot;write&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">entry</span><span class="o">=</span><span class="n">entry</span><span class="p">,</span>
+                              <span class="n">var</span><span class="o">=</span><span class="n">var</span><span class="p">:</span> <span class="n">toggle_entry_state</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">var</span><span class="p">))</span>
+
+                <span class="n">update_entries</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;entry&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="p">,</span> <span class="s2">&quot;checkbox&quot;</span><span class="p">:</span> <span class="n">var</span><span class="p">}</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span>
+                         <span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">anchor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+        <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Update vehicle&quot;</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">VehicleController</span><span class="o">.</span><span class="n">update_vehicle</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">vehicle_id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">refresh_vehicle_table</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">clear_dynamic_content</span><span class="p">,</span>
+                <span class="n">update_entries</span>
+                <span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AssetManagementUI.clear_dynamic_content">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.clear_dynamic_content">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_dynamic_content</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all widgets from the dynamic content frame.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="o">.</span><span class="n">winfo_children</span><span class="p">():</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AssetManagementUI.show_search_form">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.show_search_form">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_search_form</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Display the search form and execute search based on criteria.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_dynamic_content</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_vehicle_table</span><span class="p">()</span>
+        <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span>
+                 <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Search Vehicles&quot;</span><span class="p">,</span>
+                 <span class="n">font</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+                 <span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_search_fields</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_tax_status_dropdown</span><span class="p">()</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">VehicleController</span><span class="o">.</span><span class="n">perform_search</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_vehicle_values</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_search_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create search fields for searching vehicles.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_entries</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;Registration&quot;</span><span class="p">,</span> <span class="s2">&quot;Make&quot;</span><span class="p">,</span> <span class="s2">&quot;Model&quot;</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Vehicle Type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Fuel Type&quot;</span><span class="p">,</span> <span class="s2">&quot;Service Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Tax Due Date&quot;</span>
+        <span class="p">]:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">)</span>
+            <span class="n">frame</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">field</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">entry</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
+                <span class="s2">&quot;&lt;KeyRelease&gt;&quot;</span><span class="p">,</span>
+                <span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_vehicle_values</span><span class="p">(</span>
+                    <span class="n">VehicleController</span><span class="o">.</span><span class="n">perform_search</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                    <span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">search_entries</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry</span>
+
+<div class="viewcode-block" id="AssetManagementUI.update_vehicle_values">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.update_vehicle_values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_vehicle_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the vehicle table with new data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            vehicles (List[Tuple]): List of vehicle details to populate table.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">get_children</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">results</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">vehicle</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vehicle_table</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">vehicle</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_tax_status_dropdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a dropdown for selecting the tax status of the vehicle.&quot;&quot;&quot;</span>
+        <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Tax Status&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
+            <span class="n">anchor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tax_status_var</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">StringVar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tax_status_dropdown</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">Combobox</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_content_frame</span><span class="p">,</span>
+            <span class="n">textvariable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tax_status_var</span><span class="p">,</span>
+            <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Tax Paid&quot;</span><span class="p">,</span> <span class="s2">&quot;Tax Due&quot;</span><span class="p">,</span> <span class="s2">&quot;SORN&quot;</span><span class="p">,</span> <span class="s2">&quot;Exempt&quot;</span><span class="p">],</span>
+            <span class="n">state</span><span class="o">=</span><span class="s2">&quot;readonly&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tax_status_dropdown</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tax_status_dropdown</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
+            <span class="s2">&quot;&lt;&lt;ComboboxSelected&gt;&gt;&quot;</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_vehicle_values</span><span class="p">(</span>
+                <span class="n">VehicleController</span><span class="o">.</span><span class="n">perform_search</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="p">))</span>
+
+<div class="viewcode-block" id="AssetManagementUI.open_new_window">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.open_new_window">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open_new_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create_widget</span><span class="p">:</span> <span class="nb">callable</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a new window for asset reporting functions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            create_widget (Callable): The function to create the widget in the</span>
+<span class="sd">            new window.</span>
+<span class="sd">            *args: Additional arguments to pass to the widget creation</span>
+<span class="sd">            function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_window</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">()</span>
+        <span class="n">new_window</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Asset Reporting&quot;</span><span class="p">)</span>
+        <span class="n">create_widget</span><span class="p">(</span><span class="n">new_window</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AssetManagementUI.open_asset_reporting_page">
+<a class="viewcode-back" href="../../../ui_manager.html#asset_management.frontend.ui_manager.AssetManagementUI.open_asset_reporting_page">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open_asset_reporting_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_window</span><span class="p">:</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">,</span>
+                                  <span class="n">db</span><span class="p">:</span> <span class="n">VehicleDatabase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Open the page to generate asset reports.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            new_window (tk.Toplevel): The newly created window for asset</span>
+<span class="sd">            reporting.</span>
+<span class="sd">            db (VehicleDatabase): The database connection instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">AssetReportingPage</span><span class="p">(</span><span class="n">new_window</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, 730095122.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
